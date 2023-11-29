@@ -1,16 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
-// Import Image from next/image
-import Link from "next/link";
+import { useRouter } from "next/router";
+// Import useRouter from next/router for navigation
 import type { NextPage } from "next";
+import { TicketIcon } from "@heroicons/react/24/outline";
 import { MetaHeader } from "~~/components/MetaHeader";
 
 // Import Link from next/link
 
 const CreditRequest: NextPage = () => {
+  const [inputValue, setInputValue] = useState(""); // This state holds the input value
+  const router = useRouter(); // This is used to programmatically navigate
+
+  // This function is called whenever the input changes
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = event.target.value;
-    console.log("Input value:", inputValue);
+    setInputValue(event.target.value); // Update the state with the new value
+  };
+
+  // This function will be called when the user wants to navigate to the next page
+  const handleSubmit = () => {
+    // Navigate to the next page and pass the inputValue as a query parameter
+    router.push({
+      pathname: "/title-selection",
+      query: { loanAmount: inputValue }, // Pass the inputValue as a query parameter
+    });
   };
 
   return (
@@ -51,16 +64,16 @@ const CreditRequest: NextPage = () => {
             </div>
 
             <div className="flex flex-row justify-evenly bg-base-200 px-5 py-2 w-full rounded-2xl">
-              <div className="px-4 text-left">
-                <div className="">
-                  <Image src="" className="" alt="" />
-                  <p>Empréstimo</p>
+              <div className="px-4 pt-4 text-left">
+                <div className="flex flex-row gap-2 justify-center items-start">
+                  <TicketIcon className="w-4 h-4" />
+                  <p className="my-0 mx-0">Empréstimo</p>
                 </div>
                 <p>a partir de R$99,99</p>
               </div>
               <div className="px-4 text-left">
                 <div>
-                  <Image src="" className="" alt="" />
+                  {/* <Image src="" className="" alt="" /> */}
                   <p>Prazo</p>
                 </div>
 
@@ -68,7 +81,7 @@ const CreditRequest: NextPage = () => {
               </div>
               <div className="px-4 text-left">
                 <div>
-                  <Image src="" className="" alt="" />
+                  {/* <Image src="" className="" alt="" /> */}
                   <p>Juros</p>
                 </div>
 
@@ -78,12 +91,23 @@ const CreditRequest: NextPage = () => {
           </div>
 
           <div className="flex flex-col items-center">
-            <Link
-              href="/title-selection"
-              className="bg-base-300 hover:bg-base-200 font-medium rounded-md text-sm px-10 py-2.5"
+            {/* Wrap the input and button in a form element */}
+            <form
+              onSubmit={e => {
+                e.preventDefault(); // Prevent the default form submission
+                handleSubmit(); // Call the handleSubmit function when the form is submitted
+              }}
             >
-              Solicitar empréstimo
-            </Link>
+              {/* ... rest of your input code ... */}
+
+              {/* The button to submit the form */}
+              <button
+                type="submit"
+                className="bg-base-300 hover:bg-base-200 font-medium rounded-md text-sm px-10 py-2.5"
+              >
+                Solicitar empréstimo
+              </button>
+            </form>
           </div>
         </div>
       </div>

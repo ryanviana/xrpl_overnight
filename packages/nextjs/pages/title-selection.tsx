@@ -1,18 +1,54 @@
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
+import { useGlobalState } from "~~/context/GlobalStateContext";
 
-// Import Link from next/link
+// Define the type for the inputValues state
+type InputValuesType = {
+  [key: string]: string;
+};
 
 const TitleSelection: NextPage = () => {
-  // Function to handle the input change and store the value
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Process inputValue here or store it in state to be used in another screen
-    const inputValue = event.target.value;
+  const { setBalance } = useGlobalState();
+  const router = useRouter();
+  const [loanAmount, setLoanAmount] = useState(""); // State to hold the loan amount
+  const [inputValues, setInputValues] = useState<InputValuesType>({}); // State to hold all input values
 
-    // You can further process or store the value for use in another screen
-    console.log("Input value:", inputValue);
+  useEffect(() => {
+    // If the page has finished loading and the router is ready
+    if (router.isReady) {
+      // Retrieve the loan amount from the query and set it to the state
+      const queryLoanAmount = router.query.loanAmount as string;
+      setLoanAmount(queryLoanAmount);
+    }
+  }, [router.isReady, router.query.loanAmount]); // Dependency array
+
+  // Function to handle the input change and store the value
+  const handleInputChange = (index: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setInputValues(prevValues => ({
+      ...prevValues,
+      [index]: value,
+    }));
   };
+
+  // Function to handle navigation to the success screen
+  const navigateToSuccessScreen = () => {
+    setBalance(`R$ ${totalValueUsed.toFixed(2)}`); // Update global balance
+    // Navigate to the success screen with totalValueUsed as a query parameter
+    router.push({
+      pathname: "/success-screen",
+      query: { totalValueUsed: totalValueUsed.toFixed(2) }, // Passing the total value
+    });
+  };
+
+  // Calculate the sum of all input values, ensuring each value is a number
+  const totalValueUsed = Object.values(inputValues).reduce((sum, value) => {
+    const numericValue = parseFloat(value);
+    return sum + (isNaN(numericValue) ? 0 : numericValue); // Only add if it's a number
+  }, 0);
 
   return (
     <>
@@ -23,12 +59,13 @@ const TitleSelection: NextPage = () => {
             <div className="flex flex-col items-start text-left">
               <h1 className="text-4xl mb-0">Títulos do Tesouro Direto para utilizar</h1>
 
-              <p className="text-2xl mb-2">Selecione títulos para deixar como garantia do empréstimo</p>
+              <p className="text-2xl my-2 text-zinc-500">Selecione títulos para deixar como garantia do empréstimo</p>
             </div>
 
             <div className="flex flex-col items-end text-right">
               <Link
                 href="/success-screen"
+                onClick={navigateToSuccessScreen}
                 className="bg-base-300 hover:bg-base-200 font-medium rounded-md text-sm px-10 py-2.5"
               >
                 Feito
@@ -111,49 +148,26 @@ const TitleSelection: NextPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      Tesouro Prefixado 2026
-                    </th>
-                    <td className="px-6 py-4">Banco do Brasil</td>
-                    <td className="px-6 py-4">10,6%</td>
-                    <td className="px-6 py-4">R$ 1000,00</td>
-                    <td className="px-6 py-4 text-right">
-                      <input
-                        className="px-2 py-2 text-left focus:outline-none focus:border-blue-500 w-full"
-                        type="number"
-                        placeholder="R$0,00"
-                        onChange={handleInputChange}
-                      />
-                    </td>
-                  </tr>
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      Tesouro IPCA+ 2032
-                    </th>
-                    <td className="px-6 py-4">Nubank</td>
-                    <td className="px-6 py-4">IPCA + 5,63%</td>
-                    <td className="px-6 py-4">R$ 2000,00</td>
-                    <td className="px-6 py-4 text-right">
-                      <Link href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                        Edit
-                      </Link>
-                    </td>
-                  </tr>
-                  <tr className="bg-white dark:bg-gray-800">
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      Tesouro Selic 2029
-                    </th>
-                    <td className="px-6 py-4">Bradesco</td>
-                    <td className="px-6 py-4">SELIC + 0,0431%</td>
-                    <td className="px-6 py-4">R$ 7000,00</td>
-                    <td className="px-6 py-4 text-right">
-                      <Link href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                        Edit
-                      </Link>
-                    </td>
-                  </tr>
-
+                  {/* Map over a list of titles to create table rows */}
+                  {["Tesouro Prefixado 2026", "Tesouro IPCA+ 2032", "Tesouro Selic 2029"].map((title, index) => (
+                    <tr key={title} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {title}
+                      </th>
+                      <td className="px-6 py-4">Banco do Brasil</td>
+                      <td className="px-6 py-4">10,6%</td>
+                      <td className="px-6 py-4">R$ 1000,00</td>
+                      <td className="px-6 py-4 text-right">
+                        <input
+                          className="px-2 py-2 text-left focus:outline-none focus:border-blue-500 w-full"
+                          type="number"
+                          placeholder="R$0,00"
+                          value={inputValues[`value-${index}`] || ""} // Use dynamic keys for inputValues
+                          onChange={handleInputChange(`value-${index}`)} // Pass a unique key for each input
+                        />
+                      </td>
+                    </tr>
+                  ))}
                   <tr className="bg-gray-200 dark:bg-gray-800">
                     <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       <div>
@@ -166,8 +180,9 @@ const TitleSelection: NextPage = () => {
                     <td className="px-6 py-4"></td>
                     <td className="px-6 py-4 text-right">
                       <div>
-                        <p>R$ 3000,00</p>
-                        <p>Soma dos valores</p>
+                        <p>{loanAmount ? `R$ ${loanAmount}` : "R$ 0,00"}</p>
+                        {/* Display the sum of values */}
+                        <p>R$ {totalValueUsed.toFixed(2)}</p>
                       </div>
                     </td>
                   </tr>
