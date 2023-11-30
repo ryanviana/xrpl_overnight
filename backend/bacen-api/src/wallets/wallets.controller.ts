@@ -42,6 +42,6 @@ export class WalletsController {
 
   @Get('/cpf/:cpf')
   findByCpf(@Param('cpf') cpf: string) {
-    return this.walletService.getWalletByCpf(cpf);
+    return this.walletService.getWalletsByCpf(cpf);
   }
 }

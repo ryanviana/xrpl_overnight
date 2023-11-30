@@ -48,11 +48,11 @@ export class WalletService {
   //   return deletedWallet;
   // }
 
-  async getWalletByCpf(cpf: string): Promise<IWallet> {
-    const wallet = await this.walletModel.findOne({ cpf }).lean();
-    if (!wallet) {
-      throw new NotFoundException(`Wallet with CPF ${cpf} not found`);
+  async getWalletsByCpf(cpf: string): Promise<IWallet[]> {
+    const wallets = await this.walletModel.find({ cpf: cpf }).exec();
+    if (wallets.length === 0) {
+      throw new NotFoundException(`Wallets with CPF ${cpf} not found`);
     }
-    return wallet;
+    return wallets;
   }
 }
