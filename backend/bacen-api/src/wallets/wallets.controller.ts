@@ -35,10 +35,10 @@ export class WalletsController {
     return this.walletService.updateWallet(id, updateWalletDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.walletService.deleteWallet(id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.walletService.deleteWallet(id);
+  // }
 
   @Get('/cpf/:cpf')
   findByCpf(@Param('cpf') cpf: string) {

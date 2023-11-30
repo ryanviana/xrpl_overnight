@@ -40,11 +40,11 @@ export class BankService {
     }
     return existingBank;
   }
-  async deleteBank(bankId: string): Promise<IBank> {
-    const deletedBank = await this.bankModel.findByIdAndDelete(bankId);
-    if (!deletedBank) {
-      throw new NotFoundException(`Bank #${bankId} not found`);
-    }
-    return deletedBank;
-  }
+  // async deleteBank(bankId: string): Promise<IBank> {
+  //   const deletedBank = await this.bankModel.findByIdAndDelete(bankId);
+  //   if (!deletedBank) {
+  //     throw new NotFoundException(`Bank #${bankId} not found`);
+  //   }
+  //   return deletedBank;
+  // }
 }

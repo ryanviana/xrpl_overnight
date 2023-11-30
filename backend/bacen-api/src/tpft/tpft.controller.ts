@@ -35,10 +35,10 @@ export class TpftController {
     return this.tpftService.udpateTPFt(id, updateTpftDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tpftService.deleteTPFt(id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.tpftService.deleteTPFt(id);
+  // }
 
   @Get('/wallet/:walletId')
   findByWallet(@Param('walletId') walletId: string) {

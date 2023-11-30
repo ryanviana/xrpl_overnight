@@ -49,11 +49,11 @@ export class TpftService {
     }
     return existingTPFt;
   }
-  async deleteTPFt(tpftId: string): Promise<ITPFt> {
-    const deletedTPFt = await this.tpftModel.findByIdAndDelete(tpftId);
-    if (!deletedTPFt) {
-      throw new NotFoundException(`TPFt #${tpftId} not found`);
-    }
-    return deletedTPFt;
-  }
+  // async deleteTPFt(tpftId: string): Promise<ITPFt> {
+  //   const deletedTPFt = await this.tpftModel.findByIdAndDelete(tpftId);
+  //   if (!deletedTPFt) {
+  //     throw new NotFoundException(`TPFt #${tpftId} not found`);
+  //   }
+  //   return deletedTPFt;
+  // }
 }

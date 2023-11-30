@@ -14,6 +14,10 @@ import { TPFtSchema } from './schemas/tpft.schema';
 import { TPFtModule } from './tpft/tpft.module';
 import { TpftController } from './tpft/tpft.controller';
 import { TpftService } from './tpft/tpft.service';
+import { SelicModule } from './selic/selic.module';
+import { SelicController } from './selic/selic.controller';
+import { SelicService } from './selic/selicServices/selic.service';
+import { SelicProfitCalculatorService } from './selic/selicServices/selicProfitCaculator.service';
 
 @Module({
   imports: [
@@ -27,13 +31,22 @@ import { TpftService } from './tpft/tpft.service';
     BankModule,
     WalletsModule,
     TPFtModule,
+    SelicModule,
   ],
   controllers: [
     AppController,
     BankController,
     WalletController,
     TpftController,
+    SelicController,
   ],
-  providers: [AppService, BankService, WalletService, TpftService],
+  providers: [
+    AppService,
+    BankService,
+    WalletService,
+    TpftService,
+    SelicService,
+    SelicProfitCalculatorService,
+  ],
 })
 export class AppModule {}

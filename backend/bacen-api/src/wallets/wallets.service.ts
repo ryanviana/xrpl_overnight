@@ -40,13 +40,13 @@ export class WalletService {
     }
     return existingWallet;
   }
-  async deleteWallet(walletId: string): Promise<IWallet> {
-    const deletedWallet = await this.walletModel.findByIdAndDelete(walletId);
-    if (!deletedWallet) {
-      throw new NotFoundException(`Wallet #${walletId} not found`);
-    }
-    return deletedWallet;
-  }
+  // async deleteWallet(walletId: string): Promise<IWallet> {
+  //   const deletedWallet = await this.walletModel.findByIdAndDelete(walletId);
+  //   if (!deletedWallet) {
+  //     throw new NotFoundException(`Wallet #${walletId} not found`);
+  //   }
+  //   return deletedWallet;
+  // }
 
   async getWalletByCpf(cpf: string): Promise<IWallet> {
     const wallet = await this.walletModel.findOne({ cpf }).lean();
