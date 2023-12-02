@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import dotenv from "dotenv";
 import { ethers } from "ethers";
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { useGlobalState } from "~~/context/GlobalStateContext";
 import CredpixJSON from "~~/utils/Credpix.json";
+import scaffoldConfig from "~~/scaffold.config";
 
 // Define the type for the inputValues state
 type InputValuesType = {
@@ -44,9 +44,8 @@ const TitleSelection: NextPage = () => {
     contractAddress: string,
     abi: any
 ) {
-  dotenv.config();
     // Carregar a chave privada do arquivo .env
-    const privateKey = process.env.PRIVATE_KEY;
+    const privateKey = scaffoldConfig.PRIVATE_KEY;
     if (!privateKey) {
         throw new Error('Chave privada não definida no .env');
     }
