@@ -37,6 +37,11 @@ Contrato inteligente para tokenização dos títulos do Tesouro Nacional. També
 **2.4) withdrawInvestor:** função utilizada para a instituição financeira realizar a liquidação dos títulos de um investidor. Nessa função, é realizado o mecanismo contrário da função invest: o contrato inteligente recebe o número de tokens TPFt da carteira do usuário e paga o investidor com o Real Tokenizado com base no preço do ativo no momento.
 
 **2.5) withdrawBacen:** função utilizada para o Banco Central receber os tokens de Real Tokenizado de todos os investimentos efetuados naquele título
+
+ ### 3) Credpix
+
+ O Credpix é a implementação em contratos inteligentes do nosso mecanismo de crédito colateralizado com o Real Tokenizado. Para efetuar uma operação de crédito, a instituição financeira deve chamar a função creditOperation, a qual recebe o TPFt do devedor, que fica armazenado no contrato, e efetua a transação em Real Tokenizado da instituição financeira que está efetuando essa operação. Além disso, essa operação é salva para que haja o controle do pagamento da dívida.
+
  
 ## Requirements
 
