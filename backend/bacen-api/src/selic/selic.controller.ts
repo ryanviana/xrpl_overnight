@@ -2,14 +2,20 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { SelicProfitCalculatorService } from './selicServices/selicProfitCaculator.service';
 
-@Controller('profit-calculator')
+@Controller('selic-profit-calculator')
 export class SelicController {
   constructor(
     private selicProfitCalculatorService: SelicProfitCalculatorService,
   ) {}
 
   @Get()
-  async calculateProfit(@Query('initialTimestamp') initialTimestamp: string) {
-    return this.selicProfitCalculatorService.calculateProfit(initialTimestamp);
+  async calculateProfit(
+    @Query('initialDate') initialDate: string,
+    @Query('initialPrice') initialPrice: number,
+  ) {
+    return this.selicProfitCalculatorService.calculateProfit(
+      initialDate,
+      initialPrice,
+    );
   }
 }

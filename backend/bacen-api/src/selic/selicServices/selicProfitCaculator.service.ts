@@ -7,21 +7,30 @@ export class SelicProfitCalculatorService {
   constructor(private selicService: SelicService) {}
 
   async calculateProfit(
-    initialTimestamp: string,
-  ): Promise<{ profitReais: number; profitPercentage: number }> {
-    const initialDate = new Date(initialTimestamp);
-    const today = new Date();
-    const daysCount = differenceInCalendarDays(today, initialDate);
+    initialDate: string,
+    initialPrice: number,
+  ): Promise<{
+    profitReais: number;
+    profitPercentage: number;
+    blockchainValues: number;
+  }> {
+    const selicRates = await this.selicService.getLatestSelicRate(initialDate);
 
-    // Get selic rate for the period
-    const selicRate = await this.selicService.getLatestSelicRate(
-      initialDate,
-      today,
-    );
+    let totalProfitPercentage = 1;
 
-    // Calculate profit
-    const profitPercentage = selicRate * daysCount;
-    const profitReais = profitPercentage / 100;
-    return { profitReais, profitPercentage };
+    selicRates.forEach((rate) => {
+      const dailyRate = 1 + parseFloat(rate.valor) * 0.01;
+      totalProfitPercentage *= dailyRate;
+    });
+
+    console.log(totalProfitPercentage);
+
+    const profitPercentage = (totalProfitPercentage - 1) * 100;
+
+    const principalAmount = initialPrice; // Replace with the actual principal amount
+    const profitReais = principalAmount * (totalProfitPercentage - 1);
+    const blockchainValues = profitReais * Math.floor(Math.pow(10, 18));
+
+    return { profitReais, profitPercentage, blockchainValues };
   }
 }
