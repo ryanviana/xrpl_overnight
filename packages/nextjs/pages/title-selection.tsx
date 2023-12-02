@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import dotenv from "dotenv";
+import ethers from "ethers";
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { useGlobalState } from "~~/context/GlobalStateContext";
@@ -9,6 +11,8 @@ import { useGlobalState } from "~~/context/GlobalStateContext";
 type InputValuesType = {
   [key: string]: string;
 };
+
+dotenv.config();
 
 const TitleSelection: NextPage = () => {
   const { setBalance } = useGlobalState();
@@ -36,7 +40,10 @@ const TitleSelection: NextPage = () => {
 
   // Function to handle navigation to the success screen
   const navigateToSuccessScreen = () => {
-    setBalance(`R$ ${totalValueUsed.toFixed(2)}`); // Update global balance
+    incrementBalance(totalValueUsed); // Increment global balance
+
+    // AQUI ADICIONAMOS O CÓDIGO PARA SALVAR OS DADOS NO BANCO DE DADOS
+
     // Navigate to the success screen with totalValueUsed as a query parameter
     router.push({
       pathname: "/success-screen",
@@ -49,6 +56,8 @@ const TitleSelection: NextPage = () => {
     const numericValue = parseFloat(value);
     return sum + (isNaN(numericValue) ? 0 : numericValue); // Only add if it's a number
   }, 0);
+
+  const { incrementBalance } = useGlobalState(); // Use the global state increment function
 
   return (
     <>

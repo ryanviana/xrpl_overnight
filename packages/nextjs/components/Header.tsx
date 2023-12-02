@@ -17,7 +17,7 @@ export const menuLinks: HeaderMenuLink[] = [
     href: "/",
     icon: "",
   },
-  {
+  /* {
     label: "Conta digital",
     href: "",
     icon: "",
@@ -26,7 +26,7 @@ export const menuLinks: HeaderMenuLink[] = [
     label: "Investimentos",
     href: "",
     icon: "",
-  },
+  }, */
   {
     label: "Solicitar crédito",
     href: "/credit-request",

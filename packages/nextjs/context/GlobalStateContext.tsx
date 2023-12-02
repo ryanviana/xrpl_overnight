@@ -2,8 +2,9 @@ import React, { ReactNode, createContext, useContext, useState } from "react";
 
 // Define a type for your context state
 interface GlobalStateContextType {
-  balance: string;
-  setBalance: (balance: string) => void;
+  balance: number;
+  setBalance: (balance: number) => void;
+  incrementBalance: (amount: number) => void;
 }
 
 // Create the context with an initial empty state
@@ -24,7 +25,16 @@ interface GlobalStateProviderProps {
 }
 
 export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({ children }) => {
-  const [balance, setBalance] = useState<string>("R$ 0,00");
+  const [balance, setBalance] = useState<number>(0);
 
-  return <GlobalStateContext.Provider value={{ balance, setBalance }}>{children}</GlobalStateContext.Provider>;
+  const incrementBalance = (amount: number) => {
+    const newBalance = balance + amount;
+    setBalance(newBalance);
+  };
+
+  return (
+    <GlobalStateContext.Provider value={{ balance, setBalance, incrementBalance }}>
+      {children}
+    </GlobalStateContext.Provider>
+  );
 };

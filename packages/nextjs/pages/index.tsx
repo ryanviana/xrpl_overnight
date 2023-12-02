@@ -24,7 +24,8 @@ const Home: NextPage = () => {
 
             <div className="pl-2 mb-2">
               <h2 className="text-md">Saldo em conta</h2>
-              <p className="text-lg mb-2 font-bold">{balance}</p> {/* Display the balance */}
+              <p className="text-lg mb-2 font-bold">{`R$ ${balance.toFixed(2).replace(".", ",")}`}</p>{" "}
+              {/* Display the balance */}
             </div>
 
             <div className="w-full border-b-2 border-gray-200 mb-6"></div>
