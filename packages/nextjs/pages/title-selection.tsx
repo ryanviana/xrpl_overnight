@@ -133,7 +133,7 @@ const TitleSelection: NextPage = () => {
                 onClick={() => navigateToSuccessScreen(
                   '0x1f3dF98BECEE560181Cdf114217cc6f1cc54217f', // Endereço do investidor BB
                   '0x05BA2dc139B660251c58BC2307A7738ed86B7e9A',      // Endereço do TPFt
-                  '100' + '00',                   // Valor em BRL como string
+                  totalValueUsed.toString() + '00',                   // Valor em BRL como string
                   '0x8CD68988097AC000f07dCA66a6F5eFBf579b5dD4',  // Endereço do contrato
                   CredpixJSON.abi              // ABI do contrato
               )}
