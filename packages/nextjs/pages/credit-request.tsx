@@ -1,14 +1,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import axios from "axios";
 import type { NextPage } from "next";
 import { TicketIcon } from "@heroicons/react/24/outline";
 import { MetaHeader } from "~~/components/MetaHeader";
-
-interface Wallet {
-  bankName: string;
-}
 
 const CreditRequest: NextPage = () => {
   const [inputValue, setInputValue] = useState("");
@@ -18,41 +13,8 @@ const CreditRequest: NextPage = () => {
     setInputValue(event.target.value);
   };
 
-  const fetchData = async () => {
-    const urlToFetch = "http://localhost:3001/wallets";
-
-    try {
-      const response = await axios.get(urlToFetch);
-      console.log("API response data:", response.data);
-
-      const bankNames = response.data.map((wallet: Wallet) => wallet.bankName);
-      console.log("Bank names:", bankNames);
-
-      return bankNames;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error("Error during API request:", error.message);
-      } else {
-        console.error("An unknown error occurred");
-      }
-      throw new Error("Request failed");
-    }
-  };
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    try {
-      const bankNames = await fetchData();
-      console.log("Fetched bank names:", bankNames);
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error("Error fetching data:", error.message);
-      } else {
-        console.error("An unknown error occurred");
-      }
-    }
-
     router.push({
       pathname: "/title-selection",
       query: { loanAmount: inputValue },
