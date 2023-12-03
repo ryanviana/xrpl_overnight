@@ -10,13 +10,10 @@ const SuccessScreen: NextPage = () => {
 
   useEffect(() => {
     if (router.isReady) {
-      // Retrieve the total value used from the query
       const queryTotalValue = router.query.totalValueUsed as string;
       if (queryTotalValue) {
-        // Set the total value if it's defined
-        setTotalValue(queryTotalValue as string);
+        setTotalValue(queryTotalValue);
       } else {
-        // Otherwise, redirect to the credit request page
         router.push("/credit-request");
       }
     }

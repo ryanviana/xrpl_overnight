@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { useGlobalState } from "~~/context/GlobalStateContext";
-import scaffoldConfig from "~~/scaffold.config.ts";
+import scaffoldConfig from "~~/scaffold.config";
 import CredpixJSON from "~~/utils/Credpix.json";
 
 // Define the type for the inputValues state
