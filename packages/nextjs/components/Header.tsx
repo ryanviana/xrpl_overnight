@@ -1,9 +1,7 @@
 import React, { useCallback, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
-import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
-import { useOutsideClick } from "~~/hooks/scaffold-eth";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 
 interface HeaderMenuLink {
   label: string;
@@ -19,12 +17,12 @@ export const menuLinks: HeaderMenuLink[] = [
   },
   {
     label: "Conta digital",
-    href: "",
+    href: "/conta-digital",
     icon: "",
   },
   {
     label: "Investimentos",
-    href: "",
+    href: "/investimentos",
     icon: "",
   },
   {
@@ -34,13 +32,8 @@ export const menuLinks: HeaderMenuLink[] = [
   },
   {
     label: "Imobiliário",
-    href: "",
+    href: "/imobiliario",
     icon: "",
-  },
-  {
-    label: "Debug Contracts",
-    href: "/debug",
-    icon: <BugAntIcon className="h-4 w-4" />,
   },
 ];
 
@@ -70,16 +63,9 @@ export const HeaderMenuLinks = () => {
   );
 };
 
-/**
- * Site header
- */
 export const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const burgerMenuRef = useRef<HTMLDivElement>(null);
-  useOutsideClick(
-    burgerMenuRef,
-    useCallback(() => setIsDrawerOpen(false), []),
-  );
 
   return (
     <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 justify-between z-20 shadow-md shadow-secondary px-0 sm:px-2">
@@ -114,10 +100,6 @@ export const Header = () => {
         <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
           <HeaderMenuLinks />
         </ul>
-      </div>
-      <div className="navbar-end flex-grow mr-4">
-        <RainbowKitCustomConnectButton />
-        <FaucetButton />
       </div>
     </div>
   );

@@ -1,28 +1,61 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-// Import useRouter from next/router for navigation
+import axios from "axios";
 import type { NextPage } from "next";
 import { TicketIcon } from "@heroicons/react/24/outline";
 import { MetaHeader } from "~~/components/MetaHeader";
 
-// Import Link from next/link
+interface Wallet {
+  bankName: string;
+}
 
 const CreditRequest: NextPage = () => {
-  const [inputValue, setInputValue] = useState(""); // This state holds the input value
-  const router = useRouter(); // This is used to programmatically navigate
+  const [inputValue, setInputValue] = useState("");
+  const router = useRouter();
 
-  // This function is called whenever the input changes
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value); // Update the state with the new value
+    setInputValue(event.target.value);
   };
 
-  // This function will be called when the user wants to navigate to the next page
-  const handleSubmit = () => {
-    // Navigate to the next page and pass the inputValue as a query parameter
+  const fetchData = async () => {
+    const urlToFetch = "http://localhost:3001/wallets";
+
+    try {
+      const response = await axios.get(urlToFetch);
+      console.log("API response data:", response.data);
+
+      const bankNames = response.data.map((wallet: Wallet) => wallet.bankName);
+      console.log("Bank names:", bankNames);
+
+      return bankNames;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error during API request:", error.message);
+      } else {
+        console.error("An unknown error occurred");
+      }
+      throw new Error("Request failed");
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    try {
+      const bankNames = await fetchData();
+      console.log("Fetched bank names:", bankNames);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error fetching data:", error.message);
+      } else {
+        console.error("An unknown error occurred");
+      }
+    }
+
     router.push({
       pathname: "/title-selection",
-      query: { loanAmount: inputValue }, // Pass the inputValue as a query parameter
+      query: { loanAmount: inputValue },
     });
   };
 
@@ -35,8 +68,8 @@ const CreditRequest: NextPage = () => {
             <Image
               src="/images/tesouro-logo.jpg"
               className="object-contain"
-              height={80}
               width={80}
+              height={80}
               alt="Tesouro Logo"
             />
           </div>
@@ -95,12 +128,9 @@ const CreditRequest: NextPage = () => {
             <form
               onSubmit={e => {
                 e.preventDefault(); // Prevent the default form submission
-                handleSubmit(); // Call the handleSubmit function when the form is submitted
+                handleSubmit(e); // Pass the event to handleSubmit
               }}
             >
-              {/* ... rest of your input code ... */}
-
-              {/* The button to submit the form */}
               <button
                 type="submit"
                 className="bg-base-300 hover:bg-base-200 font-medium rounded-md text-sm px-10 py-2.5"
