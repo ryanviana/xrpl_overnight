@@ -143,9 +143,9 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
    * @notice It then multiplies the balance of the calling wallet by the token price to get the current balance in terms of the interest token.
    * @return The current balance of the calling address in terms of the underlying interest token.
    */
-  function getCurrentBalance() public view virtual returns (uint256) {
+  function getCurrentBalance(address _investor) public view returns (uint256) {
     uint256 tokenPrice = this.getTokenPrice();
-    return this.balanceOf(msg.sender) * tokenPrice;
+    return this.balanceOf(_investor) * tokenPrice;
   }
 
   /**
