@@ -1,57 +1,59 @@
 import Link from "next/link";
+import { useGlobalState } from "../context/GlobalStateContext";
 import type { NextPage } from "next";
-import { BugAntIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { BanknotesIcon } from "@heroicons/react/24/outline";
 import { MetaHeader } from "~~/components/MetaHeader";
 
+const transactions: any[] = [
+  // This array would be filled with transaction data
+];
+
 const Home: NextPage = () => {
+  const { balance } = useGlobalState(); // Use the global state
+
   return (
     <>
       <MetaHeader />
-      <div className="flex items-center flex-col flex-grow pt-10">
-        <div className="px-5">
-          <h1 className="text-center mb-8">
-            <span className="block text-2xl mb-2">Welcome to</span>
-            <span className="block text-4xl font-bold">Scaffold-ETH 2</span>
-          </h1>
-          <p className="text-center text-lg">
-            Get started by editing{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/nextjs/pages/index.tsx
-            </code>
-          </p>
-          <p className="text-center text-lg">
-            Edit your smart contract{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              YourContract.sol
-            </code>{" "}
-            in{" "}
-            <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-              packages/hardhat/contracts
-            </code>
-          </p>
-        </div>
+      <div className="flex-grow bg-base-200 w-full px-8 py-12">
+        <div className="flex flex-row justify-center px-12 gap-4">
+          {/* Left column for transactions */}
+          <div className="flex flex-col bg-base-100 w-full max-w-md px-10 py-10 text-left items-start rounded-xl">
+            <h1 className="text-2xl font-bold mb-2">Extrato</h1>
 
-        <div className="flex-grow bg-base-300 w-full mt-16 px-8 py-12">
-          <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <BugAntIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Tinker with your smart contract using the{" "}
-                <Link href="/debug" passHref className="link">
-                  Debug Contract
-                </Link>{" "}
-                tab.
-              </p>
+            <div className="w-full border-b-2 border-gray-200 mb-4"></div>
+
+            <div className="pl-2 mb-2">
+              <h2 className="text-md">Saldo em conta</h2>
+              <p className="text-lg mb-2 font-bold">{balance}</p> {/* Display the balance */}
             </div>
-            <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">
-              <MagnifyingGlassIcon className="h-8 w-8 fill-secondary" />
-              <p>
-                Explore your local transactions with the{" "}
-                <Link href="/blockexplorer" passHref className="link">
-                  Block Explorer
-                </Link>{" "}
-                tab.
-              </p>
+
+            <div className="w-full border-b-2 border-gray-200 mb-6"></div>
+
+            <h2 className="text-xl mb-4">Últimas movimentações</h2>
+            {/* List transactions here */}
+            {transactions.length > 0 ? (
+              transactions.map((transaction, index) => (
+                // Render each transaction here
+                <div key={index}>{/* Transaction details */}</div>
+              ))
+            ) : (
+              <p className="text-center justify-center">Nenhuma transação</p>
+            )}
+          </div>
+
+          {/* Right column for banners */}
+          <div className="flex flex-col gap-4 items-center text-center w-full max-w-md">
+            {/* Placeholder for the first banner */}
+            <div className="h-56 w-full bg-base-100 rounded-xl flex items-center justify-center">Imagem decorativa</div>
+            {/* Placeholder for the second banner */}
+            <div className="h-56 w-full bg-base-100 rounded-xl flex items-center justify-center">
+              <div className="px-10 py-10 flex flex-col items-center">
+                <BanknotesIcon className="h-8 w-8 fill-secondary" />
+                <p className="mb-2">Usar o Tesouro Direto como Garantia de Empréstimo.</p>
+                <Link href="/credit-request" className="font-semibold hover:underline">
+                  Clique aqui!
+                </Link>
+              </div>
             </div>
           </div>
         </div>
