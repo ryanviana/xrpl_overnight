@@ -5,19 +5,18 @@ import { ethers } from "ethers";
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { useGlobalState } from "~~/context/GlobalStateContext";
-import CredpixJSON from "~~/utils/Credpix.json";
 import scaffoldConfig from "~~/scaffold.config";
+import CredpixJSON from "~~/utils/Credpix.json";
 
 // Define the type for the inputValues state
 type InputValuesType = {
   [key: string]: string;
 };
 const TitleSelection: NextPage = () => {
-
-  const { setBalance } = useGlobalState();
   const router = useRouter();
   const [loanAmount, setLoanAmount] = useState(""); // State to hold the loan amount
   const [inputValues, setInputValues] = useState<InputValuesType>({}); // State to hold all input values
+  const [isLoading, setIsLoading] = useState(false); // New state for loading status
 
   useEffect(() => {
     // If the page has finished loading and the router is ready
@@ -42,16 +41,18 @@ const TitleSelection: NextPage = () => {
     TPFtAddress: string,
     BRLAmount: string,
     contractAddress: string,
-    abi: any
-) {
+    abi: any,
+  ) {
     // Carregar a chave privada do arquivo .env
     const privateKey = scaffoldConfig.PRIVATE_KEY;
     if (!privateKey) {
-        throw new Error('Chave privada não definida no .env');
+      throw new Error("Chave privada não definida no .env");
     }
 
     // Configurar o provedor e a carteira
-    const provider = new ethers.providers.JsonRpcProvider('https://goerli.infura.io/v3/13c92f65c1ba443b8490aa6ad3f9f24e');
+    const provider = new ethers.providers.JsonRpcProvider(
+      "https://goerli.infura.io/v3/13c92f65c1ba443b8490aa6ad3f9f24e",
+    );
     const wallet = new ethers.Wallet(privateKey, provider);
 
     // Criar uma instância do contrato
@@ -59,19 +60,15 @@ const TitleSelection: NextPage = () => {
 
     // Chamar a função creditOperation do contrato
     try {
-        const transaction = await contract.creditOperation(
-            investorAddress,
-            TPFtAddress,
-            BRLAmount
-        );
+      const transaction = await contract.creditOperation(investorAddress, TPFtAddress, BRLAmount);
 
-        // Aguardar a confirmação da transação
-        await transaction.wait();
-        console.log('Operação de crédito realizada com sucesso');
+      // Aguardar a confirmação da transação
+      await transaction.wait();
+      console.log("Operação de crédito realizada com sucesso");
     } catch (error) {
-        console.error('Erro ao realizar operação de crédito:', error);
+      console.error("Erro ao realizar operação de crédito:", error);
     }
-}
+  }
 
   // Function to handle navigation to the success screen
   const navigateToSuccessScreen = async (
@@ -79,33 +76,35 @@ const TitleSelection: NextPage = () => {
     TPFtAddress: string,
     BRLAmount: string, // Agora recebe BRLAmount como parâmetro
     contractAddress: string,
-    contractAbi: any
-) => {
+    contractAbi: any,
+  ) => {
     incrementBalance(totalValueUsed); // Incrementa o saldo global
+    setIsLoading(true); // Disable navigation by setting isLoading to true
 
     // Chama a função creditOperation com os parâmetros fornecidos
     try {
-        await creditOperation(
-            investorAddress,     // Endereço do investidor
-            TPFtAddress,         // Endereço do TPFt
-            BRLAmount,           // Valor em BRL
-            contractAddress,     // Endereço do contrato
-            contractAbi          // ABI do contrato
-        );
-        console.log('Operação de crédito realizada com sucesso.');
+      await creditOperation(
+        investorAddress, // Endereço do investidor
+        TPFtAddress, // Endereço do TPFt
+        BRLAmount, // Valor em BRL
+        contractAddress, // Endereço do contrato
+        contractAbi, // ABI do contrato
+      );
+      console.log("Operação de crédito realizada com sucesso.");
 
-        // Aqui você pode adicionar código para salvar os dados no banco de dados
-
-        // Navega para a tela de sucesso com totalValueUsed como parâmetro de consulta
-        router.push({
-            pathname: "/success-screen",
-            query: { totalValueUsed: totalValueUsed.toFixed(2) }, // Passando o valor total
-        });
+      // Aqui você pode adicionar código para salvar os dados no banco de dados
     } catch (error) {
-        console.error('Erro na operação de crédito:', error);
-        // Trate o erro como achar necessário
+      console.error("Erro na operação de crédito:", error);
     }
-};
+
+    setIsLoading(false); // Re-enable navigation by setting isLoading to false
+
+    // Navega para a tela de sucesso com totalValueUsed como parâmetro de consulta
+    router.push({
+      pathname: "/success-screen",
+      query: { totalValueUsed: totalValueUsed.toFixed(2) }, // Passando o valor total
+    });
+  };
 
   // Calculate the sum of all input values, ensuring each value is a number
   const totalValueUsed = Object.values(inputValues).reduce((sum, value) => {
@@ -128,19 +127,23 @@ const TitleSelection: NextPage = () => {
             </div>
 
             <div className="flex flex-col items-end text-right">
-              <Link
-                href="/success-screen"
-                onClick={() => navigateToSuccessScreen(
-                  '0x1f3dF98BECEE560181Cdf114217cc6f1cc54217f', // Endereço do investidor BB
-                  '0x05BA2dc139B660251c58BC2307A7738ed86B7e9A',      // Endereço do TPFt
-                  totalValueUsed.toString() + '00',                   // Valor em BRL como string
-                  '0x8CD68988097AC000f07dCA66a6F5eFBf579b5dD4',  // Endereço do contrato
-                  CredpixJSON.abi              // ABI do contrato
-              )}
-                className="bg-base-300 hover:bg-base-200 font-medium rounded-md text-sm px-10 py-2.5"
+              <button
+                disabled={isLoading} // Disable the button based on isLoading state
+                onClick={() =>
+                  navigateToSuccessScreen(
+                    "0x1f3dF98BECEE560181Cdf114217cc6f1cc54217f",
+                    "0x05BA2dc139B660251c58BC2307A7738ed86B7e9A",
+                    totalValueUsed.toString() + "00",
+                    "0x8CD68988097AC000f07dCA66a6F5eFBf579b5dD4",
+                    CredpixJSON.abi,
+                  )
+                }
+                className={`bg-base-300 hover:bg-base-200 font-medium rounded-md text-sm px-10 py-2.5 ${
+                  isLoading ? "opacity-50" : ""
+                }`}
               >
-                Feito
-              </Link>
+                {isLoading ? "Processando..." : "Feito"}
+              </button>
             </div>
           </div>
 
