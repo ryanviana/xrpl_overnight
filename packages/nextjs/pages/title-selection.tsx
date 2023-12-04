@@ -6,6 +6,12 @@ import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { useGlobalState } from "~~/context/GlobalStateContext";
 import CredpixJSON from "~~/utils/Credpix.json";
+import {
+  fetchTPFtByAddress,
+  fetchWalletByCpfAndBank,
+  findAddressByBankName,
+  findTPFtByAddres,
+} from "~~/utils/bacenApiFetcher";
 
 // Define the type for the inputValues state
 type InputValuesType = {
@@ -16,14 +22,33 @@ const TitleSelection: NextPage = () => {
   const [loanAmount, setLoanAmount] = useState(""); // State to hold the loan amount
   const [inputValues, setInputValues] = useState<InputValuesType>({}); // State to hold all input values
   const [isLoading, setIsLoading] = useState(false); // New state for loading status
+  const [currentValue, setCurrentValue] = useState(0); // State to hold the current value of the Selic title
 
   useEffect(() => {
-    // If the page has finished loading and the router is ready
-    if (router.isReady) {
-      // Retrieve the loan amount from the query and set it to the state
-      const queryLoanAmount = router.query.loanAmount as string;
-      setLoanAmount(queryLoanAmount);
-    }
+    // Define an async function to fetch and filter data
+    const fetchDataAndFilter = async () => {
+      // If the page has finished loading and the router is ready
+      if (router.isReady) {
+        // Retrieve the loan amount from the query and set it to the state
+        const queryLoanAmount = router.query.loanAmount as string;
+        setLoanAmount(queryLoanAmount);
+
+        const cpf = "11640141619"; // CPF do usuário
+        const bankName = "RGBank"; // Nome do banco do usuário
+        try {
+          const walletData = await fetchWalletByCpfAndBank(cpf);
+          const walletAddresses = await findAddressByBankName(walletData, bankName); // Use await here
+          const walletAddress = walletAddresses[0];
+          const tpfts = await fetchTPFtByAddress();
+          const addressTPFts = await findTPFtByAddres(tpfts, walletAddress); // Use await here
+          setCurrentValue(addressTPFts.value.current);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+
+    fetchDataAndFilter(); // Call the async function to fetch and filter data
   }, [router.isReady, router.query.loanAmount]); // Dependency array
 
   // Function to handle the input change and store the value
@@ -230,7 +255,9 @@ const TitleSelection: NextPage = () => {
                       </th>
                       <td className="px-6 py-4">Banco do Brasil</td>
                       <td className="px-6 py-4">10,6%</td>
-                      <td className="px-6 py-4">R$ 1000,00</td>
+                      <td className="px-6 py-4">
+                        R$ {title === "Tesouro Selic 2029" ? currentValue?.toFixed(0) || "0,00" : 1000}
+                      </td>
                       <td className="px-6 py-4 text-right">
                         <input
                           className="px-2 py-2 text-left focus:outline-none focus:border-blue-500 w-full"
