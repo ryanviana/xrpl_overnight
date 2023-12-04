@@ -17,7 +17,7 @@ const Home: NextPage = () => {
       <div className="flex-grow bg-base-200 w-full px-8 py-12">
         <div className="flex flex-row justify-center px-12 gap-4">
           {/* Left column for transactions */}
-          <div className="flex flex-col bg-base-100 w-full max-w-md px-10 py-10 text-left items-start rounded-xl">
+          <div className="flex flex-col bg-base-100 w-full max-w-md px-10 py-10 text-left items-start rounded-xl shadow-lg">
             <h1 className="text-2xl font-bold mb-2">Extrato</h1>
 
             <div className="w-full border-b-2 border-gray-200 mb-4"></div>
@@ -45,9 +45,11 @@ const Home: NextPage = () => {
           {/* Right column for banners */}
           <div className="flex flex-col gap-4 items-center text-center w-full max-w-md">
             {/* Placeholder for the first banner */}
-            <div className="h-56 w-full bg-base-100 rounded-xl flex items-center justify-center">Imagem decorativa</div>
+            <div className="bg-base-100 rounded-xl overflow-hidden flex justify-center items-center shadow-lg">
+              <img src="/banner.jpg" alt="Descrição acessível" className="w-full object-cover" />
+            </div>
             {/* Placeholder for the second banner */}
-            <div className="h-56 w-full bg-base-100 rounded-xl flex items-center justify-center">
+            <div className="h-56 w-full bg-base-100 rounded-xl flex items-center justify-center shadow-lg">
               <div className="px-10 py-10 flex flex-col items-center">
                 <BanknotesIcon className="h-8 w-8 fill-secondary" />
                 <p className="mb-2">Usar o Tesouro Direto como Garantia de Empréstimo.</p>
