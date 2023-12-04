@@ -139,6 +139,13 @@ const TitleSelection: NextPage = () => {
 
   const { incrementBalance } = useGlobalState(); // Use the global state increment function
 
+  const titlesData = [
+    { title: "Tesouro Prefixado 2026", institution: "Banco do Brasil", yield: "10,4%" },
+    { title: "Tesouro IPCA+ 2032", institution: "Caixa Econômica", yield: "IPCA + 6,2%" },
+    { title: "Tesouro Selic 2029", institution: "Banco Santander", yield: "SELIC + 0,147%" },
+    // Add more titles and their respective data as needed
+  ];
+
   return (
     <>
       <MetaHeader />
@@ -174,8 +181,8 @@ const TitleSelection: NextPage = () => {
 
           <div className="flex flex-col py-2 w-full px-10">
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-              <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <table className="w-full text-sm text-left rtl:text-right text-gray-500">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                   <tr>
                     <th scope="col" className="px-6 py-3">
                       Título
@@ -247,16 +254,15 @@ const TitleSelection: NextPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* Map over a list of titles to create table rows */}
-                  {["Tesouro Prefixado 2026", "Tesouro IPCA+ 2032", "Tesouro Selic 2029"].map((title, index) => (
-                    <tr key={title} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                      <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        {title}
+                  {titlesData.map((data, index) => (
+                    <tr key={data.title} className="bg-white border-b">
+                      <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                        {data.title}
                       </th>
-                      <td className="px-6 py-4">Banco do Brasil</td>
-                      <td className="px-6 py-4">10,6%</td>
+                      <td className="px-6 py-4">{data.institution}</td>
+                      <td className="px-6 py-4">{data.yield}</td>
                       <td className="px-6 py-4">
-                        R$ {title === "Tesouro Selic 2029" ? currentValue?.toFixed(0) || "0,00" : 1000}
+                        R$ {data.title === "Tesouro Selic 2029" ? currentValue?.toFixed(0) || "0,00" : 10000}
                       </td>
                       <td className="px-6 py-4 text-right">
                         <input
@@ -269,11 +275,11 @@ const TitleSelection: NextPage = () => {
                       </td>
                     </tr>
                   ))}
-                  <tr className="bg-gray-200 dark:bg-gray-800">
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                  <tr className="bg-gray-200">
+                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                       <div>
                         <p>Empréstimo desejado</p>
-                        <p className="">Valor usado como garantia</p>
+                        <p className="font-bold text-lg">Valor usado como garantia</p>
                       </div>
                     </th>
                     <td className="px-6 py-4"></td>
@@ -283,7 +289,7 @@ const TitleSelection: NextPage = () => {
                       <div>
                         <p>{loanAmount ? `R$ ${loanAmount}` : "R$ 0,00"}</p>
                         {/* Display the sum of values */}
-                        <p>R$ {totalValueUsed.toFixed(2)}</p>
+                        <p className="font-bold text-lg">R$ {totalValueUsed.toFixed(2)}</p>
                       </div>
                     </td>
                   </tr>
