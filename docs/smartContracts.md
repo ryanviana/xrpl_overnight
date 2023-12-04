@@ -31,7 +31,7 @@ Contrato inteligente para tokenização dos títulos do Tesouro Nacional. També
 
 **2.5) withdrawBacen:** função utilizada para o Banco Central receber os tokens de Real Tokenizado de todos os investimentos efetuados naquele título
 
- ### 3) Credpix
+ ### 3) Credpix (Credpix.sol)
 
  O Credpix é a implementação em contratos inteligentes do nosso mecanismo de crédito colateralizado com o Real Tokenizado. Esse contrato não apenas serve para o usuário obter crédito colateralizado, mas também para que as parcelas de crédito sejam pagas. Além disso, foi desenvolvido um mecanismo que permite que o usuário efetue um resgate parcial do colateral conforme sejam pagas as parcelas (sempre garantindo que o colateral seja superior ao débito com o credor).
 
@@ -44,3 +44,15 @@ Contrato inteligente para tokenização dos títulos do Tesouro Nacional. També
 **3.4) payCreditor:** função a ser utilizada para efetuar o pagamento de uma parcela de crédito
 
 **3.5) getCollateralBack:** função utilizada para que o usuário realize o saque da parcela do colateral referente aos pagamentos já efetuados.
+
+
+ ### 4) SelicOracle (SelicOracle.sol) e ComputeProfitRefactored (ComputeProfitRefactored.sol)
+Esses contratos são responsáveis por efetuar a lógica de rentabilidade do ativo ao longo do tempo conforme as variações da Taxa Selic. Para isso, é utilizada a ferramenta do Chainlink Functions, a qual permite o acesso à API de Taxa Selic do Banco Central (SelicOracle.sol) e a execução de um código em Javascript (string source) no ComputeProfitRefactored.sol.
+
+**4.1) sendRequest (em SelicOracle.sol)**: deve-se passar o subscriptionId (970) e uma array com um intervalo entre duas datas como string. Por exemplo, se você quer obter as taxas Selic diárias de 2021, você deve passar o seguinte argumento: ["01/01/2021", "31/12/2021"]. Assim, o contrato irá retornar uma array com todas as taxas desse período;
+
+**4.2) computeProfit (SelicOracle.sol):** cálculo da rentabilidade do ativo durante o período e esse dado é salvo na variável uint256 public profit. Dessa forma, no contrato inteligente do TFPt, é calculado o valor atual do ativo através da soma do valor inicial com o profit.
+
+ ### 5) IComputeProfit (IComputeProfit.sol)
+ Interface utilizada para interagir com as funções do contrato inteligente ComputeProfitRefactored.  
+
