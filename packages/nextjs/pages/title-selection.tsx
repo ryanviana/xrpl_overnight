@@ -5,7 +5,6 @@ import { ethers } from "ethers";
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
 import { useGlobalState } from "~~/context/GlobalStateContext";
-import scaffoldConfig from "~~/scaffold.config";
 import CredpixJSON from "~~/utils/Credpix.json";
 
 // Define the type for the inputValues state
@@ -44,13 +43,15 @@ const TitleSelection: NextPage = () => {
     abi: any,
   ) {
     // Carregar a chave privada do arquivo .env
-    const privateKey = scaffoldConfig.PRIVATE_KEY;
+    const privateKey = process.env.API_KEY;
     if (!privateKey) {
       throw new Error("Chave privada não definida no .env");
     }
 
     // Configurar o provedor e a carteira
-    const provider = new ethers.providers.JsonRpcProvider('https://solemn-spring-model.matic-testnet.quiknode.pro/093e82e684aba9fe5675ccb677bdb8d98c217239/');
+    const provider = new ethers.providers.JsonRpcProvider(
+      "https://solemn-spring-model.matic-testnet.quiknode.pro/093e82e684aba9fe5675ccb677bdb8d98c217239/",
+    );
 
     const wallet = new ethers.Wallet(privateKey, provider);
 
