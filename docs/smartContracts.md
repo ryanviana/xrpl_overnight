@@ -54,5 +54,8 @@ Esses contratos são responsáveis por efetuar a lógica de rentabilidade do ati
 **4.2) computeProfit (SelicOracle.sol):** cálculo da rentabilidade do ativo durante o período e esse dado é salvo na variável uint256 public profit. Dessa forma, no contrato inteligente do TFPt, é calculado o valor atual do ativo através da soma do valor inicial com o profit.
 
  ### 5) IComputeProfit (IComputeProfit.sol)
- Interface utilizada para interagir com as funções do contrato inteligente ComputeProfitRefactored.  
+Interface utilizada para interagir com as funções do contrato inteligente ComputeProfitRefactored. Essa interface é utilizada no contrato TFPt.sol e SelicOracle.sol.
+
+### 6) Math (math.sol)
+Contrato inteligente da biblioteca DSMath para cálculos matemáticos em Solidity.
 
