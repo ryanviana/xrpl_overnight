@@ -2,7 +2,7 @@
 
 Uma solução de crédito colateralizado com títulos do Tesouro Nacional **de forma fácil, instantânea e desburocratizada!**
 ### Documentações técnicas
-[Link para a documentação dos contratos inteligentes!](./docs/smartContracts.md)
+[Documentação e endereço dos contratos inteligentes!](./docs/smartContracts.md)
 
 ## Requirements
 
