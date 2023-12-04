@@ -38,3 +38,4 @@ yarn-error.log*
 *.tsbuildinfo
 scaffold.config.ts
 .env*.local
+next.config.js

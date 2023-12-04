@@ -43,8 +43,9 @@ const TitleSelection: NextPage = () => {
     abi: any,
   ) {
     // Carregar a chave privada do arquivo .env
-    const privateKey = process.env.PRIVATE_KEY;
-    if (!privateKey) {
+    const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+    console.log("Chave privada:", privateKey);
+    if (privateKey == null) {
       throw new Error("Chave privada não definida no .env");
     }
 
