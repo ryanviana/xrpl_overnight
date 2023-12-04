@@ -6,6 +6,7 @@ O principal diferencial da nossa aplicação nos contratos inteligentes é que d
 
 
 ### 1) Real Tokenizado (RealTokenizado.sol)
+Endereço do contrato na Mumbai: 0xa4478cc3988D5A54bb6dae775a7C06dE66530523
 
 Contrato inteligente desenvolvido no padrão ERC-20 para simular o Real Tokenizado. Além das funções essenciais do ERC-20, também foram desenvolvidas as seguintes features:
 
@@ -16,7 +17,8 @@ Contrato inteligente desenvolvido no padrão ERC-20 para simular o Real Tokeniza
 **1.3) myntUser e burnUser:** função desenvolvida para que instituições financeiras e o Banco Central tenham acesso a mintar e fazer o burn de tokens de seus clientes. Por exemplo, um usuário tem R$1000 em Real Tokenizado e deseja sacar esse dinheiro em moeda física na agência do banco. Então, o banco pode realizar o burn desses tokens e efetuar o pagamento pessoalmente para o cliente.
 
  ### 2) Tesouro Federal Público Tokenizado (TFPt.sol)
- 
+Endereço do contrato na Mumbai: 0x70fDD8DD7A09F6d6F7460777a631875c39d7bfCD 
+
 Contrato inteligente para tokenização dos títulos do Tesouro Nacional. Também desenvolvido com o padrão ERC-20, mas esse contrato apresenta maior complexidade e segue abaixo as principais features:
 
 **2.1) Privileged Accounts:** toda a lógica já explicado anteriormente.
@@ -32,6 +34,7 @@ Contrato inteligente para tokenização dos títulos do Tesouro Nacional. També
 **2.5) withdrawBacen:** função utilizada para o Banco Central receber os tokens de Real Tokenizado de todos os investimentos efetuados naquele título
 
  ### 3) Credpix (Credpix.sol)
+Endereço do contrato na Mumbai: 0x9f94816D0F3E95D14D9396aB497FCAF91829076E
 
  O Credpix é a implementação em contratos inteligentes do nosso mecanismo de crédito colateralizado com o Real Tokenizado. Esse contrato não apenas serve para o usuário obter crédito colateralizado, mas também para que as parcelas de crédito sejam pagas. Além disso, foi desenvolvido um mecanismo que permite que o usuário efetue um resgate parcial do colateral conforme sejam pagas as parcelas (sempre garantindo que o colateral seja superior ao débito com o credor).
 
@@ -47,6 +50,9 @@ Contrato inteligente para tokenização dos títulos do Tesouro Nacional. També
 
 
  ### 4) SelicOracle (SelicOracle.sol) e ComputeProfitRefactored (ComputeProfitRefactored.sol)
+Endereço do SelicOracle na Mumbai: 0xAc00D275A7F6464E500670da2957FA6b5B9Ef213
+Endereço do ComputeProfitRefactored na Mumbai: 0x91f8bcd9fe5a1fdc0834271c5a1623f71d312381
+
 Esses contratos são responsáveis por efetuar a lógica de rentabilidade do ativo ao longo do tempo conforme as variações da Taxa Selic. Para isso, é utilizada a ferramenta do Chainlink Functions, a qual permite o acesso à API de Taxa Selic do Banco Central (SelicOracle.sol) e a execução de um código em Javascript (string source) no ComputeProfitRefactored.sol.
 
 **4.1) sendRequest (em SelicOracle.sol)**: deve-se passar o subscriptionId (970) e uma array com um intervalo entre duas datas como string. Por exemplo, se você quer obter as taxas Selic diárias de 2021, você deve passar o seguinte argumento: ["01/01/2021", "31/12/2021"]. Assim, o contrato irá retornar uma array com todas as taxas desse período;
