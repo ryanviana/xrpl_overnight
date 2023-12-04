@@ -35,8 +35,12 @@ Contrato inteligente para tokenização dos títulos do Tesouro Nacional. També
 
  O Credpix é a implementação em contratos inteligentes do nosso mecanismo de crédito colateralizado com o Real Tokenizado. Esse contrato não apenas serve para o usuário obter crédito colateralizado, mas também para que as parcelas de crédito sejam pagas. Além disso, foi desenvolvido um mecanismo que permite que o usuário efetue um resgate parcial do colateral conforme sejam pagas as parcelas (sempre garantindo que o colateral seja superior ao débito com o credor).
 
-**3.1) creditOperation:** função para que seja efetuada uma operação de crédito. A instituição financeira (credor) deve chamar essa função informando a wallet do investidor, endereço do título para colateral e quantia de crédito. Essa mesma função realiza a transação de Real Tokenizado da IF para o usuário e a transação do colateral para o próprio contrato. Além disso, é efetuado um registro e atualização do saldo devedor e do colateral do investidor no contrato.
+**3.1) mapping(address => mapping(address => uint256)) public debt:** quantia que o devedor deve àquela instituição financeira;
 
-**3.2) payCreditor:** função a ser utilizada para efetuar o pagamento de uma parcela de crédito
+**3.2) mapping(address => mapping(address => uint256)) public collateral:** quantia que o devedor tem como colateral para a instituição financeira em questão;
 
-**3.3) getCollateralBack:** função utilizada para que o usuário realize o saque da parcela do colateral referente aos pagamentos já efetuados.
+**3.3) creditOperation:** função para que seja efetuada uma operação de crédito. A instituição financeira (credor) deve chamar essa função informando a wallet do investidor, endereço do título para colateral e quantia de crédito. Essa mesma função realiza a transação de Real Tokenizado da IF para o usuário e a transação do colateral para o próprio contrato. Além disso, é efetuado um registro e atualização do saldo devedor e do colateral do investidor no contrato.
+
+**3.4) payCreditor:** função a ser utilizada para efetuar o pagamento de uma parcela de crédito
+
+**3.5) getCollateralBack:** função utilizada para que o usuário realize o saque da parcela do colateral referente aos pagamentos já efetuados.
