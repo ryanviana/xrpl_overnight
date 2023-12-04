@@ -2,6 +2,8 @@
 
 Uma solução de crédito colateralizado com títulos do Tesouro Nacional **de forma fácil, instantânea e desburocratizada!**
 
+[Link para a documentação dos contratos inteligentes!](./docs/smartContracts.md)
+
 ## Contratos inteligentes 
 
 ### 1) Real Tokenizado
