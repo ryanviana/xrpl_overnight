@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import type { NextPage } from "next";
-import { TicketIcon } from "@heroicons/react/24/outline";
+import { BanknotesIcon, ClockIcon, TicketIcon } from "@heroicons/react/24/outline";
 import { MetaHeader } from "~~/components/MetaHeader";
 
 const CreditRequest: NextPage = () => {
@@ -59,47 +59,47 @@ const CreditRequest: NextPage = () => {
             </div>
 
             <div className="flex flex-row justify-evenly bg-base-200 px-5 py-2 w-full rounded-2xl">
-              <div className="px-4 pt-4 text-left">
+              <div className="px-4 text-left">
                 <div className="flex flex-row gap-2 justify-center items-start">
-                  <TicketIcon className="w-4 h-4" />
-                  <p className="my-0 mx-0">Empréstimo</p>
+                  <TicketIcon className="w-4 h-4 mt-5" /> {/* Placeholder icon for 'Prazo' */}
+                  <p className="font-bold">Empréstimo</p> {/* Bold text */}
                 </div>
-                <p>a partir de R$99,99</p>
+                <p className="mt-0">a partir de R$99,99</p>
               </div>
-              <div className="px-4 text-left">
-                <div>
-                  {/* <Image src="" className="" alt="" /> */}
-                  <p>Prazo</p>
-                </div>
 
-                <p>3 a 240 meses</p>
+              <div className="px-4 text-left">
+                <div className="flex flex-row gap-2 justify-center items-start">
+                  <ClockIcon className="w-4 h-4 mt-5" /> {/* Placeholder icon for 'Prazo' */}
+                  <p className="font-bold">Prazo</p> {/* Bold text */}
+                </div>
+                <p className="mt-0">3 a 240 meses</p>
               </div>
-              <div className="px-4 text-left">
-                <div>
-                  {/* <Image src="" className="" alt="" /> */}
-                  <p>Juros</p>
-                </div>
 
-                <p>a partir de 0,5% a.m.</p>
+              <div className="px-4 text-left">
+                <div className="flex flex-row gap-2 justify-center items-start">
+                  <BanknotesIcon className="w-4 h-4 mt-5" /> {/* Placeholder icon for 'Juros' */}
+                  <p className="font-bold">Juros</p> {/* Bold text */}
+                </div>
+                <p className="mt-0">a partir de 0,5% a.m.</p>
               </div>
             </div>
-          </div>
 
-          <div className="flex flex-col items-center">
-            {/* Wrap the input and button in a form element */}
-            <form
-              onSubmit={e => {
-                e.preventDefault(); // Prevent the default form submission
-                handleSubmit(e); // Pass the event to handleSubmit
-              }}
-            >
-              <button
-                type="submit"
-                className="bg-base-300 hover:bg-base-200 font-medium rounded-md text-sm px-10 py-2.5"
+            <div className="flex flex-col items-center mt-4">
+              {/* Wrap the input and button in a form element */}
+              <form
+                onSubmit={e => {
+                  e.preventDefault(); // Prevent the default form submission
+                  handleSubmit(e); // Pass the event to handleSubmit
+                }}
               >
-                Solicitar empréstimo
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  className="bg-base-300 hover:bg-base-200 font-medium rounded-md text-sm px-10 py-2.5"
+                >
+                  Solicitar empréstimo
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
