@@ -50,9 +50,8 @@ const TitleSelection: NextPage = () => {
     }
 
     // Configurar o provedor e a carteira
-    const provider = new ethers.providers.JsonRpcProvider(
-      "https://goerli.infura.io/v3/13c92f65c1ba443b8490aa6ad3f9f24e",
-    );
+    const provider = new ethers.providers.JsonRpcProvider('https://solemn-spring-model.matic-testnet.quiknode.pro/093e82e684aba9fe5675ccb677bdb8d98c217239/');
+
     const wallet = new ethers.Wallet(privateKey, provider);
 
     // Criar uma instância do contrato
@@ -132,9 +131,9 @@ const TitleSelection: NextPage = () => {
                 onClick={() =>
                   navigateToSuccessScreen(
                     "0x1f3dF98BECEE560181Cdf114217cc6f1cc54217f",
-                    "0x05BA2dc139B660251c58BC2307A7738ed86B7e9A",
+                    "0x70fDD8DD7A09F6d6F7460777a631875c39d7bfCD",
                     totalValueUsed.toString() + "00",
-                    "0x8CD68988097AC000f07dCA66a6F5eFBf579b5dD4",
+                    "0x9f94816D0F3E95D14D9396aB497FCAF91829076E",
                     CredpixJSON.abi,
                   )
                 }

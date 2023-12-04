@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 // Useful for debugging. Remove when deploying to a live network.
 import "hardhat/console.sol";
@@ -8,6 +8,8 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./math.sol";
+import "./IComputeProfit.sol";
+
 
 interface IBRLt {
     function balanceOf(address) external returns (uint);
@@ -25,6 +27,7 @@ interface IBRLt {
     function privilegedTransfer(address, address, uint) external returns (bool);
 }
 
+
 contract TFPt is ERC20Burnable, Ownable, DSMath {
 
   mapping(address => bool) public privilegedAccounts; //Contas privilegiadas (servicos e talvez bancos)
@@ -33,11 +36,12 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
   address public paymentToken; //Real Tokenizado
 
   uint256 public immutable maxAmount;
-  uint64 public immutable interestRate;
   uint256 public immutable dueDate;
   bytes32 public immutable assetType;
   uint256 public minimumInvestment;
   uint256 public initialPrice;
+
+  address public computeProfitContract;
 
   address[] public tokenOwners;
   mapping(address => uint256) public ownershipTimestamp;
@@ -50,7 +54,6 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
     string memory _symbol,
     uint256 _maxAmount,
     uint256 _initialPrice,
-    uint16 _interestRate,
     uint256 _dueDate,
     uint256 _minimumInvestment,
     string memory _assetType,
@@ -59,7 +62,6 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
 
     maxAmount = _maxAmount;
     initialPrice = _initialPrice;
-    interestRate = _interestRate;
     dueDate = _dueDate;
     minimumInvestment = _minimumInvestment;
     assetType = keccak256(bytes(_assetType));
@@ -68,6 +70,9 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
 
     privilegedAccounts[msg.sender] = true;
     privilegedAccounts[address(this)] = true;
+
+    computeProfitContract = 0x91f8bCd9fe5a1Fdc0834271C5a1623f71d312381;
+
   }
 
     function decimals() public view virtual override returns (uint8) {
@@ -131,10 +136,8 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
      * @notice If there is any remaining time that does not fall into a full compounding period, the function calculates the remaining interest for that time and adjusts the token price accordingly.
      * @return The current token price for the series.
      */
-    function getTokenPrice() public pure returns (uint256) {
-        // uint256 currentPrice = YieldCalculator.getCurrent(deployTimestamp, block.timestamp, dueDate, interestRate);
-        // return currentPrice;
-        return 1000000000000000000;
+    function getTokenPrice() public view returns (uint256) {
+        return initialPrice + IComputeProfit(computeProfitContract).profit();
     }
 
   /**
@@ -251,10 +254,60 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
 
   function withdrawInvestor(address _investor, uint256 _BRLAmount) public onlyPrivileged returns (bool) {
 
-    uint256 tokensAmount = _BRLAmount / getTokenPrice();
+    uint256 tokensAmount = (_BRLAmount * 10 ** 18) / getTokenPrice();
     privilegedTransfer(_investor, address(this), tokensAmount);
     privilegedTransferReal(address(this), _investor, _BRLAmount);
 
     return true;
   }
+
+    function timestampToDate(uint timestamp) public pure returns (string memory) {
+        uint year;
+        uint month;
+        uint day;
+        uint z;
+        (year, month, day, z) = _daysToDate(timestamp / 86400);
+
+        return string(abi.encodePacked(uintToString(day), "/", uintToString(month), "/", uintToString(year)));
+    }
+
+    function _daysToDate(uint _days) internal pure returns (uint year, uint month, uint day, uint z) {
+        uint L = _days + 68569 + 2440588;
+        z = L;
+        uint N = 4 * L / 146097;
+        L = L - (146097 * N + 3) / 4;
+        uint I = 4000 * (L + 1) / 1461001;
+        L = L - 1461 * I / 4 + 31;
+        uint J = 80 * L / 2447;
+        uint K = L - 2447 * J / 80;
+        L = J / 11;
+        J = J + 2 - 12 * L;
+        I = 100 * (N - 49) + I + L;
+
+        year = I;
+        month = J;
+        day = K;
+    }
+
+    function uintToString(uint _i) internal pure returns (string memory _uintAsString) {
+        if (_i == 0) {
+            return "0";
+        }
+        uint j = _i;
+        uint len;
+        while (j != 0) {
+            len++;
+            j /= 10;
+        }
+        bytes memory bstr = new bytes(len);
+        uint k = len;
+        while (_i != 0) {
+            k = k-1;
+            uint8 temp = (48 + uint8(_i - _i / 10 * 10));
+            bytes1 b1 = bytes1(temp);
+            bstr[k] = b1;
+            _i /= 10;
+        }
+        return string(bstr);
+    }
 }
