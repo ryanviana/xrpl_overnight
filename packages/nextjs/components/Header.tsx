@@ -12,7 +12,7 @@ interface HeaderMenuLink {
 export const menuLinks: HeaderMenuLink[] = [
   {
     label: "Home",
-    href: "/",
+    href: "/title-selection",
     icon: <Image src="/images/casa.png" alt="Home" width={18} height={18} />,
   },
   {
@@ -70,7 +70,7 @@ export const Header = () => {
   const burgerMenuRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="fixed top-0 left-0 h-full z-20 shadow-md shadow-secondary bg-base-100" style={{ width: "250px" }}>
+    <div className="fixed top-0 left-0 h-full z-20 shadow-md shadow-secondary bg-base-100" style={{ width: "300px" }}>
       <div className="flex flex-col h-full">
         <Link href="/" passHref className="flex items-center gap-2 p-4">
           <div className="flex flex-col mt-4">

@@ -13,7 +13,7 @@ const XRPLOvernight = ({ Component, pageProps }: AppProps) => {
       <GlobalStateProvider>
         <div className="flex">
           <Header />
-          <div className="flex flex-col flex-1 min-h-screen" style={{ marginLeft: "250px" }}>
+          <div className="flex flex-col flex-1 min-h-screen" style={{ marginLeft: "300px" }}>
             <main className="relative flex flex-col flex-1">
               <Component {...pageProps} />
             </main>
