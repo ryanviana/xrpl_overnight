@@ -1,64 +1,66 @@
 import React, { useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Bars3Icon } from "@heroicons/react/24/outline";
 
 interface HeaderMenuLink {
   label: string;
   href: string;
-  icon?: React.ReactNode;
+  icon?: JSX.Element;
 }
 
 export const menuLinks: HeaderMenuLink[] = [
   {
     label: "Home",
     href: "/",
-    icon: "",
+    icon: <Image src="/images/casa.png" alt="Home" width={18} height={18} />,
   },
   {
-    label: "Conta digital",
+    label: "Meu Dashboard",
     href: "/conta-digital",
-    icon: "",
+    icon: <Image src="/images/grafico-simples.png" alt="Dashboard" width={18} height={18} />,
   },
   {
-    label: "Investimentos",
+    label: "Perfil",
     href: "/investimentos",
-    icon: "",
+    icon: <Image src="/images/do-utilizador.png" alt="Perfil" width={18} height={18} />,
   },
   {
-    label: "Solicitar crédito",
+    label: "Configurações",
     href: "/credit-request",
-    icon: "",
+    icon: <Image src="/images/definicoes.png" alt="Configuracoes" width={18} height={18} />,
   },
   {
-    label: "Imobiliário",
+    label: "Sair",
     href: "/imobiliario",
-    icon: "",
+    icon: <Image src="/images/sair-alt.png" alt="Sair" width={18} height={18} />,
   },
 ];
 
-export const HeaderMenuLinks = () => {
+export const HeaderMenuLinks = ({ exclude, only }: { exclude?: string; only?: string }) => {
   const router = useRouter();
 
   return (
     <>
-      {menuLinks.map(({ label, href, icon }) => {
-        const isActive = router.pathname === href;
-        return (
-          <li key={href}>
-            <Link
-              href={href}
-              passHref
-              className={`${
-                isActive ? "bg-secondary shadow-md" : ""
-              } hover:bg-secondary hover:shadow-md focus:!bg-secondary active:!text-neutral py-1.5 px-3 text-sm rounded-full gap-2 grid grid-flow-col`}
-            >
-              {icon}
-              <span>{label}</span>
-            </Link>
-          </li>
-        );
-      })}
+      {menuLinks
+        .filter(link => (exclude ? link.label !== exclude : true) && (only ? link.label === only : true))
+        .map(({ label, href, icon }) => {
+          const isActive = router.pathname === href;
+          return (
+            <li key={href} className="w-full">
+              <Link
+                href={href}
+                passHref
+                className={`block py-2 px-4 text-sm rounded hover:bg-secondary ${isActive ? "bg-secondary" : ""}`}
+              >
+                <span className="flex items-center gap-2">
+                  {icon && React.cloneElement(icon, { style: { height: "120%", marginRight: "8px" } })}
+                  {label}
+                </span>
+              </Link>
+            </li>
+          );
+        })}
     </>
   );
 };
@@ -68,38 +70,19 @@ export const Header = () => {
   const burgerMenuRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 justify-between z-20 shadow-md shadow-secondary px-0 sm:px-2">
-      <div className="navbar-start w-auto lg:w-1/2">
-        <div className="lg:hidden dropdown" ref={burgerMenuRef}>
-          <label
-            tabIndex={0}
-            className={`ml-1 btn btn-ghost ${isDrawerOpen ? "hover:bg-secondary" : "hover:bg-transparent"}`}
-            onClick={() => {
-              setIsDrawerOpen(prevIsOpenState => !prevIsOpenState);
-            }}
-          >
-            <Bars3Icon className="h-1/2" />
-          </label>
-          {isDrawerOpen && (
-            <ul
-              tabIndex={0}
-              className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-              onClick={() => {
-                setIsDrawerOpen(false);
-              }}
-            >
-              <HeaderMenuLinks />
-            </ul>
-          )}
-        </div>
-        <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0">
-          <div className="flex flex-col">
-            <span className="font-semibold text-3xl leading-tight">RGBANK</span>
+    <div className="fixed top-0 left-0 h-full z-20 shadow-md shadow-secondary bg-base-100" style={{ width: "250px" }}>
+      <div className="flex flex-col h-full">
+        <Link href="/" passHref className="flex items-center gap-2 p-4">
+          <div className="flex flex-col mt-4">
+            <span className="font-semibold text-3xl leading-tight">XRPL Overnight</span>
           </div>
         </Link>
-        <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
-          <HeaderMenuLinks />
+        <ul className="menu menu-vertical px-1 gap-2 flex-grow">
+          <HeaderMenuLinks exclude="Sair" only={undefined} />
         </ul>
+        <div className="mt-auto mb-4">
+          <HeaderMenuLinks only="Sair" exclude={undefined} />
+        </div>
       </div>
     </div>
   );
