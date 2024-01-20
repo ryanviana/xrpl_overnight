@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { MouseEvent, ReactNode, useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ethers } from "ethers";
 import type { NextPage } from "next";
 import { MetaHeader } from "~~/components/MetaHeader";
+import Modal from "~~/components/Modal";
 import { useGlobalState } from "~~/context/GlobalStateContext";
 import CredpixJSON from "~~/utils/Credpix.json";
 import {
@@ -17,12 +19,15 @@ import {
 type InputValuesType = {
   [key: string]: string;
 };
+
 const TitleSelection: NextPage = () => {
   const router = useRouter();
   const [loanAmount, setLoanAmount] = useState(""); // State to hold the loan amount
   const [inputValues, setInputValues] = useState<InputValuesType>({}); // State to hold all input values
   const [isLoading, setIsLoading] = useState(false); // New state for loading status
   const [currentValue, setCurrentValue] = useState(0); // State to hold the current value of the Selic title
+  const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     // Define an async function to fetch and filter data
@@ -139,160 +144,161 @@ const TitleSelection: NextPage = () => {
 
   const { incrementBalance } = useGlobalState(); // Use the global state increment function
 
-  const titlesData = [
-    { title: "Tesouro Prefixado 2026", institution: "Banco do Brasil", yield: "10,4%" },
-    { title: "Tesouro IPCA+ 2032", institution: "Caixa Econômica", yield: "IPCA + 6,2%" },
-    { title: "Tesouro Selic 2029", institution: "Banco Santander", yield: "SELIC + 0,147%" },
-    // Add more titles and their respective data as needed
+  const loanData = [
+    {
+      institution: "Banco ABC",
+      amount: "10000",
+      title: "Tesouro Selic 2029",
+      date: "2022-01-01T23:00:00",
+      totalBorrowed: "1000",
+    },
+    {
+      institution: "Banco DEF",
+      amount: "20000",
+      title: "Tesouro Selic 2027",
+      date: "2022-01-01T22:30:00",
+      totalBorrowed: "1000",
+    },
+    {
+      institution: "Banco GHI",
+      amount: "30000",
+      title: "Tesouro Selic 2028",
+      date: "2022-01-01T22:00:00",
+      totalBorrowed: "1000",
+    },
+    {
+      institution: "Banco JKL",
+      amount: "10000",
+      title: "Tesouro Selic 2029",
+      date: "2022-01-01T21:30:00",
+      totalBorrowed: "1000",
+    },
+    {
+      institution: "Banco MNO",
+      amount: "20000",
+      title: "Tesouro Selic 2027",
+      date: "2022-01-01T21:00:00",
+      totalBorrowed: "1000",
+    },
+    {
+      institution: "Banco PQR",
+      amount: "30000",
+      title: "Tesouro Selic 2028",
+      date: "2022-01-01T20:30:00",
+      totalBorrowed: "1000",
+    },
+    {
+      institution: "Banco STU",
+      amount: "10000",
+      title: "Tesouro Selic 2029",
+      date: "2022-01-01T20:00:00",
+      totalBorrowed: "1000",
+    },
+    {
+      institution: "Banco VWX",
+      amount: "20000",
+      title: "Tesouro Selic 2027",
+      date: "2022-01-01T19:30:00",
+      totalBorrowed: "1000",
+    },
+    {
+      institution: "Banco YZA",
+      amount: "30000",
+      title: "Tesouro Selic 2028",
+      date: "2022-01-01T19:00:00",
+      totalBorrowed: "1000",
+    },
   ];
+
+  const formatCurrency = (value: string) => {
+    return `R$ ${parseFloat(value).toFixed(2).replace(".", ",")}`;
+  };
+
+  const handleRowClick = (index: number) => {
+    // Toggle the selected row (open/close) on click
+    setSelectedRowIndex(selectedRowIndex === index ? null : index);
+  };
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
 
   return (
     <>
       <MetaHeader />
-      <div className="flex flex-col flex-grow bg-base-300 items-center py-10">
-        <div className="flex flex-col bg-base-100 px-5 py-5 text-center items-center w-3/4 rounded-xl">
+      <div className="flex flex-col flex-grow bg-base-200 items-center py-10">
+        <div className="flex flex-col bg-base-100 px-5 py-5 text-center items-center w-[95%] rounded-xl">
           <div className="flex flex-row py-4 justify-between w-full px-10">
             <div className="flex flex-col items-start text-left">
-              <h1 className="text-4xl mb-0">Títulos do Tesouro Direto para utilizar</h1>
-
-              <p className="text-2xl my-2 text-zinc-500">Selecione títulos para deixar como garantia do empréstimo</p>
+              <h1 className="text-2xl mb-0">Menu de operações overnight</h1>
+              <p className="text-l my-2 text-zinc-500"></p>
             </div>
 
             <div className="flex flex-col items-end text-right">
               <button
-                disabled={isLoading} // Disable the button based on isLoading state
-                onClick={() =>
-                  navigateToSuccessScreen(
-                    "0x1f3dF98BECEE560181Cdf114217cc6f1cc54217f",
-                    "0x70fDD8DD7A09F6d6F7460777a631875c39d7bfCD",
-                    totalValueUsed.toString() + "00",
-                    "0x9f94816D0F3E95D14D9396aB497FCAF91829076E",
-                    CredpixJSON.abi,
-                  )
-                }
-                className={`bg-base-300 hover:bg-base-200 font-medium rounded-md text-sm px-10 py-2.5 ${
-                  isLoading ? "opacity-50" : ""
-                }`}
+                onClick={toggleModal}
+                className="bg-base-300 hover:bg-base-200 font-medium rounded-md text-sm px-10 py-2.5"
               >
-                {isLoading ? "Processando..." : "Feito"}
+                Solicitar crédito
               </button>
+
+              {isModalOpen && <Modal onClose={toggleModal} />}
             </div>
           </div>
 
           <div className="flex flex-col py-2 w-full px-10">
             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
               <table className="w-full text-sm text-left rtl:text-right text-gray-500">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-100">
                   <tr>
                     <th scope="col" className="px-6 py-3">
-                      Título
+                      Instituição
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      <div className="flex items-center">
-                        Instituição
-                        <Link href="#">
-                          <svg
-                            className="w-3 h-3 ms-1.5"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                          </svg>
-                        </Link>
-                      </div>
+                      Quantia (MM R$)
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      <div className="flex items-center">
-                        Rentabilidade anual
-                        <Link href="#">
-                          <svg
-                            className="w-3 h-3 ms-1.5"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                          </svg>
-                        </Link>
-                      </div>
+                      Título em colateral
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      <div className="flex items-center">
-                        Saldo
-                        <Link href="#">
-                          <svg
-                            className="w-3 h-3 ms-1.5"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                          </svg>
-                        </Link>
-                      </div>
+                      Data/hora
                     </th>
                     <th scope="col" className="px-6 py-3">
-                      <div className="flex items-center">
-                        Valor a utilizar
-                        <Link href="#">
-                          <svg
-                            className="w-3 h-3 ms-1.5"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                          </svg>
-                        </Link>
-                      </div>
+                      Status
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {titlesData.map((data, index) => (
-                    <tr key={data.title} className="bg-white border-b">
-                      <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                        {data.title}
-                      </th>
-                      <td className="px-6 py-4">{data.institution}</td>
-                      <td className="px-6 py-4">{data.yield}</td>
-                      <td className="px-6 py-4">
-                        R$ {data.title === "Tesouro Selic 2029" ? currentValue?.toFixed(0) || "0,00" : 10000}
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <input
-                          className="px-2 py-2 text-left focus:outline-none focus:border-blue-500 w-full"
-                          type="number"
-                          placeholder="R$0,00"
-                          value={inputValues[`value-${index}`] || ""} // Use dynamic keys for inputValues
-                          onChange={handleInputChange(`value-${index}`)} // Pass a unique key for each input
-                        />
-                      </td>
-                    </tr>
+                  {loanData.map((data, index) => (
+                    <React.Fragment key={index}>
+                      <tr
+                        className="bg-white border-b hover:bg-base-300 cursor-pointer"
+                        onClick={() => handleRowClick(index)}
+                      >
+                        <td className="px-6 py-4">{data.institution}</td>
+                        <td className="px-6 py-4">{formatCurrency(data.amount)}</td>
+                        <td className="px-6 py-4">{data.title}</td>
+                        <td className="px-6 py-4">{new Date(data.date).toLocaleString()}</td>
+                        <td className="px-6 py-4">{`${formatCurrency(data.totalBorrowed)} / ${formatCurrency(
+                          data.amount,
+                        )}`}</td>
+                      </tr>
+                      {selectedRowIndex === index && (
+                        <>
+                          <tr>
+                            <td colSpan={5} className="px-6 py-4">
+                              <div style={{ height: "250px", width: "100%" }}>{/* Content of the empty field */}</div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td colSpan={5} className="border-t">
+                              <hr />
+                            </td>
+                          </tr>
+                        </>
+                      )}
+                    </React.Fragment>
                   ))}
-                  <tr className="bg-gray-200">
-                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                      <div>
-                        <p>Empréstimo desejado</p>
-                        <p className="font-bold text-lg">Valor usado como garantia</p>
-                      </div>
-                    </th>
-                    <td className="px-6 py-4"></td>
-                    <td className="px-6 py-4"></td>
-                    <td className="px-6 py-4"></td>
-                    <td className="px-6 py-4 text-right">
-                      <div>
-                        <p>{loanAmount ? `R$ ${loanAmount}` : "R$ 0,00"}</p>
-                        {/* Display the sum of values */}
-                        <p className="font-bold text-lg">R$ {totalValueUsed.toFixed(2)}</p>
-                      </div>
-                    </td>
-                  </tr>
                 </tbody>
               </table>
             </div>
