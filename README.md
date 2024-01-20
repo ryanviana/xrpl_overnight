@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 💵 Credpix 
 
 Uma solução de crédito colateralizado com títulos do Tesouro Nacional **de forma fácil, instantânea e desburocratizada!**
@@ -31,3 +32,6 @@ yarn start
 ```
 
 Visit your app on: `http://localhost:3000`.
+=======
+# xrpl-overnight
+>>>>>>> 121e3607eef88ad4fd4231e552ec9c9a3c28c745
