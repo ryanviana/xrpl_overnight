@@ -1,6 +1,6 @@
 // Chart.js
 import React from "react";
-import data from "../../../mock-data/data";
+import data from "./../../../mock-data/data";
 import {
   Area,
   AreaChart,
