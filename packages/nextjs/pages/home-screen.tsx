@@ -6,6 +6,7 @@ import Modal from "~~/components/Modal";
 import { loanData } from "~~/components/loanData";
 import { LoanData } from "~~/components/types";
 import { ethers } from 'ethers';
+import OvernightJSON from "~~/utils/Overnight.json";
 require('dotenv').config();
 
 // Define the type for the inputValues state
@@ -60,7 +61,35 @@ const HomeScreen: NextPage = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const addNewLoan = (newLoanData: LoanData) => {
+  const addNewLoan = async (newLoanData: LoanData) => {
+    try {
+      const walletK = "f7115643128bcd5cf917ad3b65e360d23d7f608b046124e14d48e2097c610125"; // Nunca exponha sua chave privada em código de produção
+      const provider = new ethers.providers.JsonRpcProvider("https://rpc-evm-sidechain.xrpl.org");
+      const wallet = new ethers.Wallet(walletK, provider);
+
+      const contractAddress = "0xF6ab2D1f34031B564562c012F5809e3F7F28661B";
+      const contractABI = OvernightJSON.abi;
+
+      const contract = new ethers.Contract(contractAddress, contractABI, wallet);
+
+      // const selectedBank = banks.find(bank => bank.code === editFormData.institution);
+      // if (!selectedBank) {
+      //     console.error("Banco não selecionado");
+      //     return;
+      // }
+
+      const tx = await contract.createLiquidityRequest(
+          newLoanData.institution,
+          newLoanData.amount,
+          "0x84bAf7af378Ba73279fD92474e181324Fba31Ac7" // Substitua pelo endereço correto do ativo colateral
+      );
+
+      console.log("Transaction sent:", tx.hash);
+      await tx.wait();
+      console.log("Transaction confirmed");
+  } catch (error) {
+      console.error("Erro ao enviar a transação:", error);
+  }
     console.log("Adding new loan:", newLoanData); // Check if this logs correctly
     const newLoan: LoanData = {
       ...newLoanData,
@@ -79,9 +108,28 @@ const HomeScreen: NextPage = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent, index: number) => {
+  const handleSubmit = async (e: React.FormEvent, index: number) => {
     e.preventDefault();
     if (index == null) return;
+
+    try {
+      const walletK = "88857b999398ea72b26b9f5a00409fd5502964dc5e8c7bf5aca4e2ccecc61d84";
+      const provider = new ethers.providers.JsonRpcProvider("https://rpc-evm-sidechain.xrpl.org");
+      const wallet = new ethers.Wallet(walletK, provider);
+  
+      const contractAddress = "0xF6ab2D1f34031B564562c012F5809e3F7F28661B";
+      const contractABI = OvernightJSON.abi;
+  
+      const contract = new ethers.Contract(contractAddress, contractABI, wallet);
+
+      const tx = await contract.provideLiquidity("5", editFormData.amount);
+  
+      console.log("Transaction sent:", tx.hash);
+      await tx.wait();
+      console.log("Transaction confirmed");
+    } catch (error) {
+      console.error("Erro ao enviar a transação:", error);
+    } 
 
     console.log("Submitting form for index:", index); // Log form submission
 
@@ -106,35 +154,6 @@ const HomeScreen: NextPage = () => {
 
     setEditFormData({ institution: "", amount: "" }); // Reset form data
     console.log("Updated loans array:", updatedLoans);
-
-    try {
-      const privateKey = process.env.PRIVATE_KEY!; // Nunca exponha sua chave privada em código de produção
-      const provider = new ethers.providers.JsonRpcProvider("https://rpc-evm-sidechain.xrpl.org");
-      const wallet = new ethers.Wallet(privateKey, provider);
-
-      const contractAddress = "0xF6ab2D1f34031B564562c012F5809e3F7F28661B";
-      const contractABI = "YOUR_CONTRACT_ABI";
-
-      const contract = new ethers.Contract(contractAddress, contractABI, wallet);
-
-      const selectedBank = banks.find(bank => bank.code === editFormData.institution);
-      if (!selectedBank) {
-          console.error("Banco não selecionado");
-          return;
-      }
-
-      const tx = await contract.createLiquidityRequest(
-          selectedBank.name,
-          ethers.utils.parseUnits(editFormData.amount, "ether"),
-          "COLLATERAL_ASSET_ADDRESS" // Substitua pelo endereço correto do ativo colateral
-      );
-
-      console.log("Transaction sent:", tx.hash);
-      await tx.wait();
-      console.log("Transaction confirmed");
-  } catch (error) {
-      console.error("Erro ao enviar a transação:", error);
-  }
   };
 
   const banks = [

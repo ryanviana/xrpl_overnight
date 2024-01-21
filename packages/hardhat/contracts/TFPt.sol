@@ -1,14 +1,13 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity 0.8.18;
 
 // Useful for debugging. Remove when deploying to a live network.
 import "hardhat/console.sol";
 
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.0/contracts/token/ERC20/extensions/ERC20Burnable.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.0/contracts/access/Ownable.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.0/contracts/token/ERC20/IERC20.sol";
 import "./math.sol";
-import "./IComputeProfit.sol";
 
 
 interface IBRLt {
@@ -40,6 +39,7 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
   bytes32 public immutable assetType;
   uint256 public minimumInvestment;
   uint256 public initialPrice;
+  uint256 public interestRate;
 
   address public computeProfitContract;
 
@@ -48,7 +48,6 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
 
 
 	// Constructor: Called once on contract deployment
-	// Check packages/hardhat/deploy/00_deploy_your_contract.ts
   constructor(
     string memory _name,
     string memory _symbol,
@@ -56,9 +55,10 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
     uint256 _initialPrice,
     uint256 _dueDate,
     uint256 _minimumInvestment,
+    uint256 _interestRate,
     string memory _assetType,
     address _paymentToken
-  ) ERC20(_name, _symbol) Ownable(msg.sender) {
+  ) ERC20(_name, _symbol) Ownable() {
 
     maxAmount = _maxAmount;
     initialPrice = _initialPrice;
@@ -66,12 +66,11 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
     minimumInvestment = _minimumInvestment;
     assetType = keccak256(bytes(_assetType));
     deployTimestamp = block.timestamp;
-	  paymentToken = _paymentToken;
+	paymentToken = _paymentToken;
+    interestRate = _interestRate;
 
     privilegedAccounts[msg.sender] = true;
     privilegedAccounts[address(this)] = true;
-
-    computeProfitContract = 0x91f8bCd9fe5a1Fdc0834271C5a1623f71d312381;
 
   }
 
@@ -137,7 +136,32 @@ contract TFPt is ERC20Burnable, Ownable, DSMath {
      * @return The current token price for the series.
      */
     function getTokenPrice() public view returns (uint256) {
-        return initialPrice + IComputeProfit(computeProfitContract).profit();
+        uint256 ONE_YEAR_IN_SECONDS = 365 * 24 * 60 * 60;
+        uint256 price = WAD; // 1 * 10 ** 18
+
+        uint256 interestRateWad = interestRate * 10 ** 14; // Convert to wad format (150 = 1.5% = 0.015)
+
+        uint256 elapsedTime;
+        if (block.timestamp > dueDate) {
+            elapsedTime = dueDate - deployTimestamp;
+        } else {
+            elapsedTime = block.timestamp - deployTimestamp;
+        }
+
+        uint256 compoundingPeriods = elapsedTime / ONE_YEAR_IN_SECONDS;
+        uint256 remainingTime = elapsedTime % ONE_YEAR_IN_SECONDS;
+
+        for (uint256 i = 0; i < compoundingPeriods; i++) {
+            price = wmul(price, add(WAD, interestRateWad));
+        }
+
+        if (remainingTime > 0) {
+            uint256 remainingInterest = mul(interestRateWad, remainingTime) / ONE_YEAR_IN_SECONDS;
+            uint256 remainingRate = add(WAD, remainingInterest);
+            price = wmul(price, remainingRate);
+        }
+
+        return price;
     }
 
   /**
