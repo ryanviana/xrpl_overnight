@@ -5,6 +5,8 @@ import { MetaHeader } from "~~/components/MetaHeader";
 import Modal from "~~/components/Modal";
 import { loanData } from "~~/components/loanData";
 import { LoanData } from "~~/components/types";
+import { ethers } from 'ethers';
+require('dotenv').config();
 
 // Define the type for the inputValues state
 type InputValuesType = {
@@ -104,6 +106,35 @@ const HomeScreen: NextPage = () => {
 
     setEditFormData({ institution: "", amount: "" }); // Reset form data
     console.log("Updated loans array:", updatedLoans);
+
+    try {
+      const privateKey = process.env.PRIVATE_KEY!; // Nunca exponha sua chave privada em código de produção
+      const provider = new ethers.providers.JsonRpcProvider("https://rpc-evm-sidechain.xrpl.org");
+      const wallet = new ethers.Wallet(privateKey, provider);
+
+      const contractAddress = "0xF6ab2D1f34031B564562c012F5809e3F7F28661B";
+      const contractABI = "YOUR_CONTRACT_ABI";
+
+      const contract = new ethers.Contract(contractAddress, contractABI, wallet);
+
+      const selectedBank = banks.find(bank => bank.code === editFormData.institution);
+      if (!selectedBank) {
+          console.error("Banco não selecionado");
+          return;
+      }
+
+      const tx = await contract.createLiquidityRequest(
+          selectedBank.name,
+          ethers.utils.parseUnits(editFormData.amount, "ether"),
+          "COLLATERAL_ASSET_ADDRESS" // Substitua pelo endereço correto do ativo colateral
+      );
+
+      console.log("Transaction sent:", tx.hash);
+      await tx.wait();
+      console.log("Transaction confirmed");
+  } catch (error) {
+      console.error("Erro ao enviar a transação:", error);
+  }
   };
 
   const banks = [
