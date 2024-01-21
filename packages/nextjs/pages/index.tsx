@@ -1,68 +1,85 @@
+// login.tsx
+import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { useGlobalState } from "../context/GlobalStateContext";
-import type { NextPage } from "next";
-import { BanknotesIcon } from "@heroicons/react/24/outline";
-import { MetaHeader } from "~~/components/MetaHeader";
+import { useRouter } from "next/router";
 
-const transactions: any[] = [
-  // This array would be filled with transaction data
-];
+const Login: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-const Home: NextPage = () => {
-  const { balance } = useGlobalState(); // Use the global state
+  const [inputValue, setInputValue] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    router.push("/home-screen");
+  };
 
   return (
-    <>
-      <MetaHeader />
-      <div className="flex-grow bg-base-200 w-full px-8 py-12">
-        <div className="flex flex-row justify-center px-12 gap-4">
-          {/* Left column for transactions */}
-          <div className="flex flex-col bg-base-100 w-full max-w-md px-10 py-10 text-left items-start rounded-xl shadow-lg">
-            <h1 className="text-2xl font-bold mb-2">Extrato</h1>
+    <div className="flex flex-col h-screen bg-base-200">
+      <div className="grid place-items-center mx-2 my-20 sm:my-auto">
+        <div
+          className="w-11/12 p-12 sm:w-8/12 md:w-6/12 lg:w-5/12 2xl:w-4/12 
+            px-6 py-10 sm:px-10 sm:py-6 
+            bg-base-100 rounded-lg shadow-md lg:shadow-lg"
+        >
+          <h2 className="text-center mt-8 font-semibold text-3xl lg:text-4xl text-gray-800">Login</h2>
+          <form className="mt-10" onSubmit={handleSubmit}>
+            <label htmlFor="email" className="block text-xs font-semibold text-gray-700 uppercase">
+              E-mail
+            </label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              placeholder="Digite seu e-mail"
+              autoComplete="email"
+              className="block w-full py-3 px-1 mt-2 
+                text-gray-800 appearance-none 
+                border-b-2 border-gray-300
+                focus:text-gray-500 focus:outline-none focus:border-indigo-300"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+            />
+            <label htmlFor="password" className="block mt-10 text-xs font-semibold text-gray-700 uppercase">
+              Senha
+            </label>
+            <input
+              id="password"
+              type="password"
+              name="password"
+              placeholder="Digite sua senha"
+              autoComplete="current-password"
+              className="block w-full py-3 px-1 mt-2 mb-4
+                text-gray-800 appearance-none 
+                border-b-2 border-gray-300
+                focus:text-gray-500 focus:outline-none focus:border-indigo-300"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+            <button
+              type="submit"
+              className="w-full py-3 mt-10 bg-indigo-600 rounded-md
+                font-medium text-white uppercase
+                focus:outline-none hover:bg-indigo-700 hover:shadow-none"
+            >
+              Login
+            </button>
+            <div className="sm:flex sm:flex-wrap mt-8 sm:mb-4 text-sm text-center">
+              <div className="flex-2 underline text-indigo-600 hover:text-indigo-800">Esqueci a senha</div>
 
-            <div className="w-full border-b-2 border-gray-200 mb-4"></div>
+              <p className="flex-1 text-gray-700 text-md mx-4 my-1 sm:my-auto">ou</p>
 
-            <div className="pl-2 mb-2">
-              <h2 className="text-md">Saldo em conta</h2>
-              <p className="text-lg mb-2 font-bold">{`R$ ${balance.toFixed(2).replace(".", ",")}`}</p>{" "}
-              {/* Display the balance */}
+              <div className="flex-2 underline text-indigo-600 hover:text-indigo-800">Criar conta</div>
             </div>
-
-            <div className="w-full border-b-2 border-gray-200 mb-6"></div>
-
-            <h2 className="text-xl mb-4">Últimas movimentações</h2>
-            {/* List transactions here */}
-            {transactions.length > 0 ? (
-              transactions.map((transaction, index) => (
-                // Render each transaction here
-                <div key={index}>{/* Transaction details */}</div>
-              ))
-            ) : (
-              <p className="text-center justify-center">Nenhuma transação</p>
-            )}
-          </div>
-
-          {/* Right column for banners */}
-          <div className="flex flex-col gap-4 items-center text-center w-full max-w-md">
-            {/* Placeholder for the first banner */}
-            <div className="bg-base-100 rounded-xl overflow-hidden flex justify-center items-center shadow-lg">
-              <img src="/banner.jpg" alt="Descrição acessível" className="w-full object-cover" />
-            </div>
-            {/* Placeholder for the second banner */}
-            <div className="h-56 w-full bg-base-100 rounded-xl flex items-center justify-center shadow-lg">
-              <div className="px-10 py-10 flex flex-col items-center">
-                <BanknotesIcon className="h-8 w-8 fill-secondary" />
-                <p className="mb-2">Usar o Tesouro Direto como Garantia de Empréstimo.</p>
-                <Link href="/credit-request" className="font-semibold hover:underline">
-                  Clique aqui!
-                </Link>
-              </div>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default Home;
+export default Login;
