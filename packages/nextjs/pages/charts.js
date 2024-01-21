@@ -1,6 +1,4 @@
-// Chart.js
-import React from "react";
-import data from "../mock-data/data";
+import React, { useEffect, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -20,17 +18,21 @@ import {
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7300", "#d0ed57", "#a4de6c"];
 
 const aggregateDataByDate = data => {
+  if (!data || !Array.isArray(data)) return [];
   const aggregation = {};
   data.forEach(item => {
-    if (!aggregation[item.date]) {
-      aggregation[item.date] = { date: item.date };
+    if (item && item.date && item.name) {
+      if (!aggregation[item.date]) {
+        aggregation[item.date] = { date: item.date };
+      }
+      aggregation[item.date][item.name] = item.value;
     }
-    aggregation[item.date][item.name] = item.value;
   });
   return Object.values(aggregation);
 };
 
 const MyBarChart = ({ data }) => {
+  if (!data || data.length === 0) return <p>No data available</p>;
   const processedData = aggregateDataByDate(data);
   return (
     <BarChart
@@ -50,25 +52,25 @@ const MyBarChart = ({ data }) => {
       <Tooltip />
       <Legend />
       <ReferenceLine y={0} stroke="#000" />
-      {
-        // Dynamically create a Bar for each company
-        Object.keys(processedData[0])
-          .filter(key => key !== "date")
-          .map((key, index) => (
-            <Bar key={key} dataKey={key} fill={`hsl(${index * 60}, 70%, 50%)`} stackId="a" />
-          ))
-      }
+      {Object.keys(processedData[0] || {})
+        .filter(key => key !== "date")
+        .map((key, index) => (
+          <Bar key={key} dataKey={key} fill={`hsl(${index * 60}, 70%, 50%)`} stackId="a" />
+        ))}
     </BarChart>
   );
 };
 
 const MultiLineTrendChart = ({ data }) => {
+  if (!data || data.length === 0) return <p>No data available</p>;
   const transformedData = data.reduce((acc, { name, value, date }) => {
-    const existingEntry = acc.find(entry => entry.date === date);
-    if (existingEntry) {
-      existingEntry[name] = value;
-    } else {
-      acc.push({ date, [name]: value });
+    if (name && value && date) {
+      const existingEntry = acc.find(entry => entry.date === date);
+      if (existingEntry) {
+        existingEntry[name] = value;
+      } else {
+        acc.push({ date, [name]: value });
+      }
     }
     return acc;
   }, []);
@@ -91,19 +93,23 @@ const MultiLineTrendChart = ({ data }) => {
 };
 
 const transformData = data => {
+  if (!data || !Array.isArray(data)) return [];
   const sortedData = data.sort((a, b) => new Date(a.date) - new Date(b.date));
   return sortedData.reduce((acc, { name, value, date }) => {
-    let lastEntry = acc[acc.length - 1];
-    if (!lastEntry || lastEntry.date !== date) {
-      lastEntry = { date };
-      acc.push(lastEntry);
+    if (name && value && date) {
+      let lastEntry = acc[acc.length - 1];
+      if (!lastEntry || lastEntry.date !== date) {
+        lastEntry = { date };
+        acc.push(lastEntry);
+      }
+      lastEntry[name] = (lastEntry[name] || 0) + value;
     }
-    lastEntry[name] = (lastEntry[name] || 0) + value;
     return acc;
   }, []);
 };
 
 const StackedAreaChart = ({ data }) => {
+  if (!data || data.length === 0) return <p>No data available</p>;
   const transformedData = transformData(data);
   const uniqueNames = [...new Set(data.map(item => item.name))];
 
@@ -140,6 +146,18 @@ const StackedAreaChart = ({ data }) => {
 };
 
 const DashboardPage = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch(`/api/overnight-proxy`)
+      .then(response => response.json())
+      .then(data => {
+        console.log("Fetched data:", data); // Log the data
+        setData(data);
+      })
+      .catch(error => console.error("Error fetching data:", error));
+  }, []);
+
   return (
     <div className="dashboard">
       <div className="chart-grid">
