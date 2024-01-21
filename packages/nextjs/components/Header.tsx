@@ -17,7 +17,7 @@ export const menuLinks: HeaderMenuLink[] = [
   },
   {
     label: "Meu Dashboard",
-    href: "/conta-digital",
+    href: "/charts",
     icon: <Image src="/images/grafico-simples.png" alt="Dashboard" width={18} height={18} />,
   },
   {
