@@ -12,27 +12,17 @@ interface HeaderMenuLink {
 export const menuLinks: HeaderMenuLink[] = [
   {
     label: "Home",
-    href: "/title-selection",
+    href: "/home-screen",
     icon: <Image src="/images/casa.png" alt="Home" width={18} height={18} />,
   },
   {
     label: "Meu Dashboard",
-    href: "/conta-digital",
+    href: "",
     icon: <Image src="/images/grafico-simples.png" alt="Dashboard" width={18} height={18} />,
   },
   {
-    label: "Perfil",
-    href: "/investimentos",
-    icon: <Image src="/images/do-utilizador.png" alt="Perfil" width={18} height={18} />,
-  },
-  {
-    label: "Configurações",
-    href: "/credit-request",
-    icon: <Image src="/images/definicoes.png" alt="Configuracoes" width={18} height={18} />,
-  },
-  {
     label: "Sair",
-    href: "/imobiliario",
+    href: "/",
     icon: <Image src="/images/sair-alt.png" alt="Sair" width={18} height={18} />,
   },
 ];
@@ -72,7 +62,7 @@ export const Header = () => {
   return (
     <div className="fixed top-0 left-0 h-full z-20 shadow-md shadow-secondary bg-base-100" style={{ width: "300px" }}>
       <div className="flex flex-col h-full">
-        <Link href="/" passHref className="flex items-center gap-2 p-4">
+        <Link href="/home-screen" passHref className="flex items-center gap-2 p-4">
           <div className="flex flex-col mt-4">
             <span className="font-semibold text-3xl leading-tight">XRPL Overnight</span>
           </div>
