@@ -1,6 +1,6 @@
 # 🏛 XRP Overnight
 
-An on-chain collateralized credit solution using National Treasury bonds to secure overnight reserve operations required by the Central Bank.
+An on-chain collateralized credit solution using National Treasury bonds to secure and guarantee liquidity for overnight reserve operations required by the Central Bank.
 
 This solution provides the complete technological infrastructure so that any bank with Direct Treasury Bonds can use them as collateral (credit guarantee) in loans for other more leveraged banks to have liquidity to carry out the reserves required by the Central Bank in overnight operations.
 
