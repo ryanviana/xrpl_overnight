@@ -1,37 +1,45 @@
-<<<<<<< HEAD
-# 💵 Credpix 
+# 🏛 XRP Overnight
 
-Uma solução de crédito colateralizado com títulos do Tesouro Nacional **de forma fácil, instantânea e desburocratizada!**
-### Documentações técnicas
-[Documentação e endereço dos contratos inteligentes!](./docs/smartContracts.md)
+An on-chain collateralized credit solution using National Treasury bonds to secure overnight reserve operations required by the Central Bank.
 
-## Requirements
+This solution provides the complete technological infrastructure so that any bank with Direct Treasury Bonds can use them as collateral (credit guarantee) in loans for other more leveraged banks to have liquidity to carry out the reserves required by the Central Bank in overnight operations.
 
-Before you begin, you need to install the following tools:
+Currently, these operations are carried out daily and **move more than 1 trillion Brazilian reais daily**, according to the Central Bank itself. However, with the rise of blockchain technology and Drex, these operations could be carried out more efficiently through smart contracts, reducing costs and making the market more transparent and efficient.
 
-- [Node (v18 LTS)](https://nodejs.org/en/download/)
-- Yarn ([v1](https://classic.yarnpkg.com/en/docs/install/) or [v2+](https://yarnpkg.com/getting-started/install))
-- [Git](https://git-scm.com/downloads)
+## 🎯 Challenges
 
-## Quickstart
+1. **High transactions costs** in Overnight Operations
+2. **Lack of liquidity** due to inefficiencies in communication between different financial institutions
+3. **Risk Management** problems
 
-To get started with Scaffold-ETH 2, follow the steps below:
+## 🚀 Our solution
 
-1. Clone this repo & install dependencies
+### 📈 Business Model
 
-```
-git clone https://github.com/scaffold-eth/scaffold-eth-2.git
-cd scaffold-eth-2
-yarn install
-```
+- Technology provided by the National Treasury and Central Bank together, ensuring **alignment of interests and completeness** in the operation of tokenizing national treasury bonds;
+- **Strategic partnerships** with banks and financial institutions, to scale usage and promote the network effect for this solution;
+- System developed with **interoperability**, so that holders of government bonds can use them as collateral **at any financial institution**.
 
-4. Start your NextJS app:
+### 💻 Robust and Innovative Technology
 
-```
-yarn start
-```
+- Smart Contracts for functional and complete tokenization of treasury bonds and the Brazilian Real, simulating Drex solutions;
+- Smart Contracts for payments and credit operations with TPFt's on blockchain;
+- API and backend;
+- Functional and integrated frontend for simulation and benchmarking with an extremely simple user experience;
 
-Visit your app on: `http://localhost:3000`.
-=======
-# xrpl-overnight
->>>>>>> 121e3607eef88ad4fd4231e552ec9c9a3c28c745
+### 😌 Easy to use
+
+Despite the robust technology provided by Overnight, we believe that mass adoption of this solution can only occur if it is simple for the end-user. Therefore, we have adopted a traditional Web2 login model, which stores each user's wallets to carry out these operations.
+
+- **No need to understand Web 3**;
+- **No red tape**;
+- **No need to keep your private keys on your own**.
+
+Hence, we offer Smart Contracts and APIs for banks, which will deliver a **simple journey** to obtain credit and manage these operations.
+
+
+## 📄 Smart Contracts Docs
+[Link to the contracts' documentation](./docs/smartContracts.md)
+
+## 🖥 Application Deploy
+[Link to our application](https://xrpl-overnight.vercel.app/)
