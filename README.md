@@ -24,7 +24,8 @@ Currently, these operations are carried out daily and **move more than 1 trillio
 
 - Smart Contracts for functional and complete tokenization of treasury bonds and the Brazilian Real, simulating Drex solutions;
 - Smart Contracts for payments and credit operations with TPFt's on blockchain;
-- API and backend;
+- Backend for storing relevant off-chain data.
+- API deployed and **[available](https://xrpl-api.vercel.app/overnight)** in the cloud.
 - Functional and integrated frontend for simulation and benchmarking with an extremely simple user experience;
 
 ### 😌 Easy to use
