@@ -1,5 +1,5 @@
 
-## 👩‍💻 Smart Contracts
+## 👩‍💻 Smart Contracts Docs
 On this page, the smart contracts and their respective key functions for the system's operation will be documented. The following project involves not only the on-chain credit platform but also the tokenization of the Real and TFPt (Public Federal Treasury) securities.
 
 ### 1) Tokenized Real (RealTokenizado.sol)
