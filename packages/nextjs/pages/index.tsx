@@ -4,13 +4,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
+// The Login component for user authentication
 const Login: React.FC = () => {
+
+  // State to store email and password input
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const [inputValue, setInputValue] = useState("");
   const router = useRouter();
 
+  // Handler for form submission
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     router.push("/home-screen");

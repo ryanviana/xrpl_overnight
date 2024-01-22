@@ -9,13 +9,15 @@ import { ethers } from 'ethers';
 import OvernightJSON from "~~/utils/Overnight.json";
 require('dotenv').config();
 
-// Define the type for the inputValues state
+// Type definition for the inputValues state
 type InputValuesType = {
   [key: string]: string;
 };
 
+// HomeScreen component: Main page for overnight operations
 const HomeScreen: NextPage = () => {
   const router = useRouter();
+  // State for managing loan amount, selected row, modal visibility, loans, form data, and page version
   const [loanAmount, setLoanAmount] = useState("");
   const [selectedRowIndex, setSelectedRowIndex] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,7 +30,7 @@ const HomeScreen: NextPage = () => {
   const [version, setVersion] = useState(0);
 
   useEffect(() => {
-    // Initialize the loans state with loanData
+    // Initialize the loans state with predefined data and handle router changes
     setLoans(loanData);
 
     setFormattedQuantia(formatCurrency(editFormData.amount));
@@ -46,12 +48,14 @@ const HomeScreen: NextPage = () => {
     fetchDataAndFilter(); // Call the async function to fetch and filter data
   }, [router.isReady, router.query.loanAmount, editFormData.amount]); // Dependency array
 
+  // Function to format currency values
   const formatCurrency = (value: string) => {
     if (!value) return "R$ 0,00"; // Default value for empty input
     const numberValue = parseFloat(value);
     return isNaN(numberValue) ? "R$ 0,00" : numberValue.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   };
 
+  // Handlers for row selection, modal toggling, and form input changes
   const handleRowClick = (index: number) => {
     // Toggle the selected row (open/close) on click
     setSelectedRowIndex(selectedRowIndex === index ? null : index);
@@ -61,6 +65,7 @@ const HomeScreen: NextPage = () => {
     setIsModalOpen(!isModalOpen);
   };
 
+  // Function to add a new loan
   const addNewLoan = async (newLoanData: LoanData) => {
     try {
       const walletK = "f7115643128bcd5cf917ad3b65e360d23d7f608b046124e14d48e2097c610125"; // Nunca exponha sua chave privada em código de produção

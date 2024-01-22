@@ -2,12 +2,15 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import { LoanData } from "./types";
 
+// Type definition for the props received by the Modal component
 type ModalProps = {
-  onClose: () => void;
-  onAddLoan: (loanData: LoanData) => void;
+  onClose: () => void; // Function to be called to close the modal
+  onAddLoan: (loanData: LoanData) => void; // Function to be called to add a new loan
 };
 
+// Modal component for loan operations
 const Modal: React.FC<ModalProps> = ({ onClose, onAddLoan }) => {
+  // State for form data, initializing with empty fields
   const [formData, setFormData] = useState<LoanData>({
     institution: "",
     amount: "",
@@ -15,13 +18,17 @@ const Modal: React.FC<ModalProps> = ({ onClose, onAddLoan }) => {
     currentBorrowed: "",
   });
 
+  // State for displaying formatted loan amount
   const [formattedQuantia, setFormattedQuantia] = useState("");
+  // State for storing and displaying any error messages
   const [errorMessage, setErrorMessage] = useState("");
 
+  // Effect to format the loan amount whenever it changes
   useEffect(() => {
     setFormattedQuantia(formatCurrency(formData.amount));
   }, [formData.amount]);
 
+  // Function to format currency value to Brazilian Real format
   const formatCurrency = (value: string) => {
     const numberValue = parseFloat(value);
     if (!isNaN(numberValue)) {
@@ -30,6 +37,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onAddLoan }) => {
     return "";
   };
 
+  // Handler for input changes to update form data
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prevFormData => ({
@@ -38,6 +46,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onAddLoan }) => {
     }));
   };
 
+  // Handler for form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.institution || !formData.amount || !formData.title) {
@@ -82,6 +91,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onAddLoan }) => {
   ];
 
   return (
+    // Modal structure
     <div className="fixed inset-0 bg-black bg-opacity-40 z-40" onClick={onClose}>
       <div className="fixed inset-0 z-50 flex justify-center items-center" onClick={e => e.stopPropagation()}>
         <div className="bg-white p-8 rounded-lg" style={{ width: "600px", height: "auto" }}>
