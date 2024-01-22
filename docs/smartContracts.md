@@ -1,6 +1,6 @@
 
 ## 👩‍💻 Smart Contracts Docs
-On this page, the smart contracts and their respective key functions for the system's operation will be documented. The following project involves not only the on-chain credit platform but also the tokenization of the Real and TFPt (Public Federal Treasury) securities.
+On this page, the smart contracts and their respective key functions for the system's operation will be documented. The following project involves not only the on-chain credit platform but also the tokenization of the Real and TFPt (Tokenized National Treasury Bonds) securities.
 
 ### 1) Tokenized Real (RealTokenizado.sol)
 Contract address on XRP EVM sidechain: 0x8fFC3F0E33Fb2fa35619Aa4Eba0fe55382e8C52b
