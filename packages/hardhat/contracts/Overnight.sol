@@ -81,10 +81,10 @@ contract Overnight is Ownable, DSMath {
     }
 
     function createLiquidityRequest(string memory _institution, uint256 _totalAmount, address _collateralAsset) public onlyPrivileged returns(bool) {
-        // Criar uma nova instância de liquidityRequest diretamente no storage
+        // Create a new instance of liquidityRequest directly in storage
         liquidityRequest storage newRequest = liquidityRequests.push();
 
-        // Definir as propriedades da nova solicitação de liquidez
+        // Define the properties of the new liquidity request
         newRequest.institution = _institution;
         newRequest.institutionAddress = msg.sender;
         newRequest.totalAmount = _totalAmount;
@@ -94,24 +94,31 @@ contract Overnight is Ownable, DSMath {
         newRequest.requestDate = block.timestamp;
         newRequest.status = Status.Open;
 
+        // Lock collateral assets on smartcontract
         privilegedTransferTPFt(_collateralAsset, msg.sender, address(this), newRequest.collateralAmount);
 
         return true;
     }
 
     function provideLiquidity(uint256 _liquidityRequestIndex, uint256 _provideAmount) public onlyPrivileged returns (bool) {
+        //Check if the liquidity request exists
         require(_liquidityRequestIndex < liquidityRequests.length, "Request index out of bounds");
+
+        //Checks whether the amount sent exceeds the liquidity request
         require(_provideAmount <= (liquidityRequests[_liquidityRequestIndex].totalAmount - liquidityRequests[_liquidityRequestIndex].raisedAmount), "This value exceeds the value to be raised");
 
+        //Send money to the bank and register it in the system
         privilegedTransferReal(msg.sender, liquidityRequests[_liquidityRequestIndex].institutionAddress, _provideAmount);
         liquidityRequests[_liquidityRequestIndex].raisedAmount += _provideAmount;
 
-        // Verifica se o provedor já está na lista. Se não, adiciona.
+        //Verify if the provider is already on the liquidity providers list and add him
         if (liquidityRequests[_liquidityRequestIndex].liquidityProviders[msg.sender] == 0) {
             liquidityRequests[_liquidityRequestIndex].liquidityProviderAddresses.push(msg.sender);
         }
 
         liquidityRequests[_liquidityRequestIndex].liquidityProviders[msg.sender] += _provideAmount;
+        
+        //Increase his Liquidity Score
         liquidityProvidersScore[msg.sender] += _provideAmount; 
 
         return true;
@@ -123,6 +130,7 @@ contract Overnight is Ownable, DSMath {
 
         require(msg.sender == request.institutionAddress, "This request is not yours!");
 
+        //Pay all the ones who provided liquidity with a daily interest rate (In Brazil, it is called Selic Over)
         for (uint i = 0; i < request.liquidityProviderAddresses.length; i++) {
             address provider = request.liquidityProviderAddresses[i];
             uint256 amount = request.liquidityProviders[provider];
@@ -136,6 +144,7 @@ contract Overnight is Ownable, DSMath {
             }
         }
         
+        //Send the collateral back and close the request
         privilegedTransferTPFt(request.collateralAsset, address(this), request.institutionAddress, request.collateralAmount);
         request.status = Status.Closed;
 
@@ -143,28 +152,30 @@ contract Overnight is Ownable, DSMath {
     }
 
     function defaultPayment(uint256 _liquidityRequestIndex) public onlyPrivileged returns (bool) {
+        // Ensure the provided request index is within bounds
         require(_liquidityRequestIndex < liquidityRequests.length, "Request index out of bounds");
         liquidityRequest storage request = liquidityRequests[_liquidityRequestIndex];
+
+        // Ensure that the request status is Open, allowing for default
         require(request.status == Status.Open, "Status closed");
 
-        // Verificar se já passaram 24 horas desde a requestDate
-        //require(block.timestamp >= (request.requestDate + 24 hours), "Cannot default before 24 hours");
+        // Check if 24 hours have passed since the requestDate
         require(block.timestamp >= (request.requestDate + 86400), "Cannot default before 24 hours");
 
         uint256 amountProvided = request.liquidityProviders[msg.sender];
         require(amountProvided > 0, "No liquidity provided by sender");
 
-        // Calcular a proporção do colateral que deve ser devolvida
+        // Calculate the proportion of collateral to be returned based on the provided amount
         uint256 collateralToReturn = (amountProvided * 10 ** 18 / ITPFt(request.collateralAsset).getTokenPrice());
 
-        // Transferir o colateral proporcional de volta para o msg.sender
+        // Transfer the proportional collateral back to the sender
         privilegedTransferTPFt(request.collateralAsset, address(this), msg.sender, collateralToReturn);
 
-        // Atualizar o montante levantado e o montante do colateral restante na solicitação
+        // Update the raisedAmount and collateralAmount in the request
         request.raisedAmount -= amountProvided;
         request.collateralAmount -= collateralToReturn;
 
-        // Remover a contribuição do provedor de liquidez
+        // Remove the liquidity contribution from the provider
         request.liquidityProviders[msg.sender] = 0;
 
         return true;
