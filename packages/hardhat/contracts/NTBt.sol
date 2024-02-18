@@ -9,31 +9,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@chainlink/contracts/src/v0.8/automation/interfaces/AutomationCompatibleInterface.sol";
 import "./math.sol";
-
-interface IBRLt {
-    function balanceOf(address) external returns (uint);
-
-    function name() external returns (string memory);
-
-    function symbol() external returns (string memory);
-
-    function decimals() external returns (uint);
-
-    function totalSupply() external returns (uint);
-
-    function transfer(address to, uint256 value) external returns (bool);
-
-    function privilegedTransfer(address, address, uint) external returns (bool);
-}
-
-interface ISelicRateOracle {
-    struct Rate {
-        uint256 integerPart;
-        uint256 decimalPart;
-    }
-
-    function getRate() external view returns (Rate memory);
-}
+import "./IBRLt.sol";
+import "./ISelicRateOracle.sol";
 
 contract NTBt is ERC20Burnable, Ownable, DSMath {
     mapping(address => bool) public privilegedAccounts; //Privileged Accounts (financial institutions and government services)
