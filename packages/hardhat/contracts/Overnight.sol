@@ -4,7 +4,7 @@ pragma solidity 0.8.18;
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.0/contracts/access/Ownable.sol";
 import "./math.sol";
 
-interface ITPFt {
+interface INTBt {
     function balanceOf(address) external returns (uint);
     function name() external returns (string memory);
     function symbol() external returns (string memory);
@@ -32,7 +32,6 @@ contract Overnight is Ownable, DSMath {
     address public BRLtAddress;
     mapping(address => bool) public privilegedAccounts; // Serviços governamentais e bancos;
     mapping(address => uint256) liquidityProvidersScore; 
-    uint256 interestRateDaily;
 
     struct liquidityRequest {
         string institution;
@@ -73,13 +72,6 @@ contract Overnight is Ownable, DSMath {
         privilegedAccounts[account] = false;
     }
 
-    //Take only the part after the 3 decimal places
-    //43739 = 1,00043739
-    function setInterestRateDaily(uint256 _newInterestRateDaily) public onlyPrivileged returns (bool) {
-        interestRateDaily = _newInterestRateDaily;
-        return true;
-    }
-
     function createLiquidityRequest(string memory _institution, uint256 _totalAmount, address _collateralAsset) public onlyPrivileged returns(bool) {
         // Create a new instance of liquidityRequest directly in storage
         liquidityRequest storage newRequest = liquidityRequests.push();
@@ -90,12 +82,12 @@ contract Overnight is Ownable, DSMath {
         newRequest.totalAmount = _totalAmount;
         newRequest.raisedAmount = 0;
         newRequest.collateralAsset = _collateralAsset;
-        newRequest.collateralAmount = (_totalAmount * 10 ** 18) / (ITPFt(_collateralAsset).getTokenPrice());
+        newRequest.collateralAmount = (_totalAmount * 10 ** 18) / (INTBt(_collateralAsset).getTokenPrice());
         newRequest.requestDate = block.timestamp;
         newRequest.status = Status.Open;
 
         // Lock collateral assets on smartcontract
-        privilegedTransferTPFt(_collateralAsset, msg.sender, address(this), newRequest.collateralAmount);
+        privilegedTransferNTBt(_collateralAsset, msg.sender, address(this), newRequest.collateralAmount);
 
         return true;
     }
@@ -136,7 +128,7 @@ contract Overnight is Ownable, DSMath {
             uint256 amount = request.liquidityProviders[provider];
 
             if (amount > 0) {
-                uint256 realAmount = (amount * getDailyCompoundedTokenPrice())/(10**18);
+                uint256 realAmount = (amount * INTBt(request.collateralAsset).getTokenPrice())/(10**18);
 
                 privilegedTransferReal(msg.sender, provider, realAmount);
                 // Resetar o montante para evitar re-pagamentos
@@ -145,7 +137,7 @@ contract Overnight is Ownable, DSMath {
         }
         
         //Send the collateral back and close the request
-        privilegedTransferTPFt(request.collateralAsset, address(this), request.institutionAddress, request.collateralAmount);
+        privilegedTransferNTBt(request.collateralAsset, address(this), request.institutionAddress, request.collateralAmount);
         request.status = Status.Closed;
 
         return true;
@@ -166,10 +158,10 @@ contract Overnight is Ownable, DSMath {
         require(amountProvided > 0, "No liquidity provided by sender");
 
         // Calculate the proportion of collateral to be returned based on the provided amount
-        uint256 collateralToReturn = (amountProvided * 10 ** 18 / ITPFt(request.collateralAsset).getTokenPrice());
+        uint256 collateralToReturn = (amountProvided * 10 ** 18 / INTBt(request.collateralAsset).getTokenPrice());
 
         // Transfer the proportional collateral back to the sender
-        privilegedTransferTPFt(request.collateralAsset, address(this), msg.sender, collateralToReturn);
+        privilegedTransferNTBt(request.collateralAsset, address(this), msg.sender, collateralToReturn);
 
         // Update the raisedAmount and collateralAmount in the request
         request.raisedAmount -= amountProvided;
@@ -185,31 +177,8 @@ contract Overnight is Ownable, DSMath {
         IBRLt(BRLtAddress).privilegedTransfer(_from, _to, _amount);
     }
 
-    function privilegedTransferTPFt(address _TPFtAddress, address _from, address _to, uint256 _amount) public onlyPrivileged {
-        ITPFt(_TPFtAddress).privilegedTransfer(_from, _to, _amount);
+    function privilegedTransferNTBt(address _NTBtAddress, address _from, address _to, uint256 _amount) public onlyPrivileged {
+        INTBt(_NTBtAddress).privilegedTransfer(_from, _to, _amount);
     }
 
-    function getDailyCompoundedTokenPrice() public view returns (uint256) {
-        uint256 ONE_DAY_IN_SECONDS = 24 * 60 * 60;
-        uint256 price = WAD; // 1 * 10 ** 18
-
-        uint256 interestRateWad = interestRateDaily * 10 ** 10; // Convert to wad format (150 = 1.5% = 0.015)
-
-        uint256 elapsedTime = 86400;
-
-        uint256 compoundingPeriods = elapsedTime / ONE_DAY_IN_SECONDS;
-        uint256 remainingTime = elapsedTime % ONE_DAY_IN_SECONDS;
-
-        for (uint256 i = 0; i < compoundingPeriods; i++) {
-            price = wmul(price, add(WAD, interestRateWad));
-        }
-
-        if (remainingTime > 0) {
-            uint256 remainingInterest = mul(interestRateWad, remainingTime) / ONE_DAY_IN_SECONDS;
-            uint256 remainingRate = add(WAD, remainingInterest);
-            price = wmul(price, remainingRate);
-        }
-
-        return price;
-    }
 }
