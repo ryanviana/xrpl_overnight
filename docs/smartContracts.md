@@ -1,17 +1,17 @@
 
 ## 👩‍💻 Smart Contracts Docs
-On this page, the smart contracts and their respective key functions for the system's operation will be documented. The following project involves not only the on-chain credit platform but also the tokenization of the Real and TFPt (Tokenized National Treasury Bonds) securities.
+On this page, the smart contracts and their respective key functions for the system's operation will be documented. The following project involves not only the on-chain credit platform but also the tokenization of the BRL and NTBt (National Treasury Bonds token) securities.
 
 ### 1) Brazilian CBDC (BRLt.sol)
 Contract address on Fuji Testnet: 0x3B7aA83D8525C0260F4861E14f87506ed0244A9F
 
 A smart contract developed in the ERC-20 standard to simulate the Brazilian CBDC. In addition to the essential ERC-20 functions, the following features were also developed:
 
-**1.1) privilegedAccounts:** permissioning so that only the addresses of financial institutions, the Central Bank, and government services have access to these functions. Thus, it is up to the Central Bank to call the addPrivilegedAccount function to allow a new financial institution to operate with the Tokenized Real.
+**1.1) privilegedAccounts:** permissioning so that only the addresses of financial institutions, the Central Bank, and government services have access to these functions. Thus, it is up to the Central Bank to call the addPrivilegedAccount function to allow a new financial institution to operate with the Brazilian CBDC.
 
-**1.2) privilegedTransfer:** a function developed for banks to have access to transfer Tokenized Real tokens from clients' and users' wallets.
+**1.2) privilegedTransfer:** a function developed for banks to have access to transfer Brazilian CBDC tokens from clients' and users' wallets.
 
-**1.3) functions mintUser and burnUser:** a function developed for financial institutions and the Central Bank to have access to mint and burn tokens of their clients. For example, a user has R$1000 in Tokenized Real and wishes to withdraw this money in physical currency at the bank branch. The bank can then burn these tokens and make the payment in person to the customer.
+**1.3) functions mintUser and burnUser:** a function developed for financial institutions and the Central Bank to have access to mint and burn tokens of their clients. For example, a user has R$1000 in Brazilian CBDC and wishes to withdraw this money in physical currency at the bank branch. The bank can then burn these tokens and make the payment in person to the customer.
 
 ### 2) National Treasury Bonds token (NTBt.sol)
 Contract address on Fuji Testnet: 0xA9C5c74C998d18266118aa60CFBd9bBF89BDdb8f
