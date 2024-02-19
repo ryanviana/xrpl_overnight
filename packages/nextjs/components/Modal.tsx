@@ -98,7 +98,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onAddLoan }) => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="institution" className="block text-base text-left font-medium text-gray-700">
-                Banco solicitante
+                Requesting Bank
               </label>
               <select
                 name="institution"
@@ -107,7 +107,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onAddLoan }) => {
                 onChange={handleInputChange}
                 className="mt-1 px-4 block w-full text-gray-500 h-12 rounded-md border-2 border-gray-400 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               >
-                <option value="">Selecione o banco</option>
+                <option value="">Select your bank</option>
                 {banks.map(bank => (
                   <option key={bank.code} value={bank.code}>
                     {bank.name}
@@ -117,7 +117,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onAddLoan }) => {
             </div>
             <div>
               <label htmlFor="amount" className="block text-base text-left font-medium text-gray-700">
-                Quantia (R$)
+                Amount (R$)
               </label>
               <input
                 type="text"
@@ -128,12 +128,12 @@ const Modal: React.FC<ModalProps> = ({ onClose, onAddLoan }) => {
                 className="mt-1 px-2 block w-full h-12 rounded-md border-2 border-gray-400 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               />
               <span className="block mt-1 text-sm text-gray-600">
-                {formattedQuantia ? `Valor do empréstimo: ${formattedQuantia}` : ""}
+                {formattedQuantia ? `Loan value: ${formattedQuantia}` : ""}
               </span>
             </div>
             <div>
               <label htmlFor="title" className="block text-base text-left font-medium text-gray-700">
-                Título em colateral
+                Collateral title
               </label>
               <select
                 name="title"
@@ -142,7 +142,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onAddLoan }) => {
                 onChange={handleInputChange}
                 className="mt-1 px-4 block w-full text-gray-500 h-12 rounded-md border-2 border-gray-400 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
               >
-                <option value="">Selecione o título</option>
+                <option value="">Select the title</option>
                 {collateralTitles.map(title => (
                   <option key={title} value={title}>
                     {title}
@@ -156,7 +156,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onAddLoan }) => {
                 type="submit"
                 className="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                Confirmar
+                Confirm
               </button>
             </div>
           </form>

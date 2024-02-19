@@ -1,7 +1,7 @@
 // pages/api/proxy.js
 export default async function handler(req, res) {
     const cpf = req.query.cpf;
-    const apiUrl = `https://bacen-api.vercel.app/wallets/cpf/${cpf}`;
+    const apiUrl = `https://avalanche-overnight-api.vercel.app/wallets/cpf/${cpf}`;
   
     try {
       const apiResponse = await fetch(apiUrl);

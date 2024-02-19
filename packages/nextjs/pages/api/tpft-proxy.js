@@ -1,6 +1,6 @@
 // pages/api/proxy.js
 export default async function handler(req, res) {
-    const apiUrl = `https://bacen-api.vercel.app/tpfts`;
+    const apiUrl = `https://avalanche-overnight-api.vercel.app/tpfts`;
   
     try {
       const apiResponse = await fetch(apiUrl);

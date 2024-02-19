@@ -16,14 +16,14 @@ export const menuLinks: HeaderMenuLink[] = [
     icon: <Image src="/images/casa.png" alt="Home" width={18} height={18} />,
   },
   {
-    label: "Meu Dashboard",
+    label: "My Dashboard",
     href: "/charts",
     icon: <Image src="/images/grafico-simples.png" alt="Dashboard" width={18} height={18} />,
   },
   {
-    label: "Sair",
+    label: "Log out",
     href: "/",
-    icon: <Image src="/images/sair-alt.png" alt="Sair" width={18} height={18} />,
+    icon: <Image src="/images/sair-alt.png" alt="Log out" width={18} height={18} />,
   },
 ];
 
@@ -63,15 +63,15 @@ export const Header = () => {
     <div className="fixed top-0 left-0 h-full z-20 shadow-md shadow-secondary bg-base-100" style={{ width: "300px" }}>
       <div className="flex flex-col h-full">
         <Link href="/home-screen" passHref className="flex items-center gap-2 p-4">
-          <div className="flex flex-col mt-4">
-            <span className="font-semibold text-3xl leading-tight">XRPL Overnight</span>
+          <div className="flex flex-col items-center text-center mt-4">
+            <span className="font-semibold text-3xl leading-tight">Avalanche Overnight</span>
           </div>
         </Link>
         <ul className="menu menu-vertical px-1 gap-2 flex-grow">
-          <HeaderMenuLinks exclude="Sair" only={undefined} />
+          <HeaderMenuLinks exclude="Log out" only={undefined} />
         </ul>
         <div className="mt-auto mb-4">
-          <HeaderMenuLinks only="Sair" exclude={undefined} />
+          <HeaderMenuLinks only="Log out" exclude={undefined} />
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ import { Header } from "~~/components/Header";
 import { GlobalStateProvider } from "~~/context/GlobalStateContext";
 import "~~/styles/globals.css";
 
-const XRPLOvernight = ({ Component, pageProps }: AppProps) => {
+const AvalancheOvernight = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
 
   return (
@@ -31,4 +31,4 @@ const XRPLOvernight = ({ Component, pageProps }: AppProps) => {
   );
 };
 
-export default XRPLOvernight;
+export default AvalancheOvernight;

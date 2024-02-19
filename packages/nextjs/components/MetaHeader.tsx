@@ -14,8 +14,8 @@ type MetaHeaderProps = {
 const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/` : "/";
 
 export const MetaHeader = ({
-  title = "XRPL Overnight",
-  description = "Um projeto do grupo RGP",
+  title = "Avalanche Overnight",
+  description = "A project from RGB Group",
   image = "thumbnail.jpg",
   twitterCard = "summary_large_image",
   children,
