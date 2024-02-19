@@ -24,7 +24,7 @@ A smart contract for the tokenization of National Treasury bonds. Also developed
 
 **2.3) function getTokenPrice:** a function responsible for calculating the asset's current price. For this, the interestRate, a variable that stores the profitability of the asset in question, is used.
 
-2.4) function updateCurrentPrice: function which is called daily by Chainlink Automation after 
+**2.4) function updateCurrentPrice:** function which is called daily by **Chainlink Automation** 10 minutes after sendRequest (in SelicOracle). So, first SelicOracle updates daily interestRate and 10 minutes after we update this asset token price according to the interest rate.
 
 **2.5) function invest:** a function that the bank/financial institution must call to make an on-chain investment in this bond by one of its clients. The function will receive the individual's contribution amount, check if it is higher than the minimum investment, receive the CBDC from the user's wallet corresponding to the investment, send the NTBt tokens based on the asset price at the time, and list the investor in the list of investors for that asset. If the investor is already listed, they will not be added again.
 
