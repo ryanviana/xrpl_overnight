@@ -1,10 +1,18 @@
-# 🏛 XRP Overnight
+# 🏛 Avalanche Overnight
 
-An on-chain collateralized credit solution using National Treasury bonds to secure and guarantee liquidity for overnight reserve operations required by the Central Bank.
+In most countries around the world, central banks require minimum reserves from banks and financial institutions. The reason for this is simple:
 
-This solution provides the complete technological infrastructure so that any bank with Direct Treasury Bonds can use them as collateral (credit guarantee) in loans for other more leveraged banks to have liquidity to carry out the reserves required by the Central Bank in overnight operations.
+**1. Prevent excessive leverage:** By requiring banks to keep a portion of their deposits at the Central Bank, it limits the amount of money they can lend. This helps avoid excessive financial leverage and reduces the risk of financial crises.
 
-Currently, these operations are carried out daily and **move more than 1 trillion Brazilian reais daily**, according to the Central Bank itself. However, with the rise of blockchain technology and Drex, these operations could be carried out more efficiently through smart contracts, reducing costs and making the market more transparent and efficient.
+**2. Control of Monetary Liquidity:** Compulsory deposits are a way of regulating the amount of money in circulation. By changing the compulsory deposit rate, the Central Bank can influence the volume of credit available in the economy, which impacts inflation and economic growth.
+
+However, when banks do not have sufficient liquidity to meet reserve requirements, they often resort to interbank credit operations. These operations generally involve the use of low-risk assets, such as Treasury Bills (T-Bills) and Treasury Bonds (T-Bonds), as collateral. In the US federal funds market, banks lend and borrow from each other in overnight transactions to manage their reserves. The interest rate on these transactions is the Federal Funds Rate. Furthermore, in the Repo Market, participants use high-quality securities, such as T-Bills and T-Bonds, as collateral in short-term agreements, usually overnight.
+
+These operations move trillions of dollars every week in dozens of countries around the world. Below are the data operated by some countries:
+
+- **USA (FED):** as of June 2022, the total reserve liabilities of all depository institutions amounted to $20 trillion. (https://www.federalregister.gov/documents/2022/12/01/2022-26065/reserve-requirements-of-depository-institutions)
+
+- **Brazil (Central Bank of Brazil):** more than 1.6 trillion BRL (~320 billion dollars) transacted every month.
 
 ## 🎯 Challenges
 
