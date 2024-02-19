@@ -1,81 +1,28 @@
 // login.tsx
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/router";
+import { ConnectButton } from "@particle-network/connect-react-ui";
+import "@particle-network/connect-react-ui/dist/index.css";
 
 // The Login component for user authentication
 const Login: React.FC = () => {
-  // State to store email and password input
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const router = useRouter();
 
   // Handler for form submission
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     router.push("/home-screen");
   };
 
   return (
     <div className="flex flex-col h-screen bg-base-200">
       <div className="grid place-items-center mx-2 my-20 sm:my-auto">
-        <div
-          className="w-11/12 p-12 sm:w-8/12 md:w-6/12 lg:w-5/12 2xl:w-4/12 
-            px-6 py-10 sm:px-10 sm:py-6 
-            bg-base-100 rounded-lg shadow-md lg:shadow-lg"
-        >
-          <h2 className="text-center mt-8 font-semibold text-3xl lg:text-4xl text-gray-800">Sign in</h2>
-          <form className="mt-10" onSubmit={handleSubmit}>
-            <label htmlFor="email" className="block text-xs font-semibold text-gray-700 uppercase">
-              E-mail
-            </label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              placeholder="Type your e-mail"
-              autoComplete="email"
-              className="block w-full py-3 px-1 mt-2 
-                text-gray-800 appearance-none 
-                border-b-2 border-gray-300
-                focus:text-gray-500 focus:outline-none focus:border-indigo-300"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-            />
-            <label htmlFor="password" className="block mt-10 text-xs font-semibold text-gray-700 uppercase">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              placeholder="Type your senha"
-              autoComplete="current-password"
-              className="block w-full py-3 px-1 mt-2 mb-4
-                text-gray-800 appearance-none 
-                border-b-2 border-gray-300
-                focus:text-gray-500 focus:outline-none focus:border-indigo-300"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              required
-            />
-            <button
-              type="submit"
-              className="w-full py-3 mt-10 bg-indigo-600 rounded-md
-                font-medium text-white uppercase
-                focus:outline-none hover:bg-indigo-700 hover:shadow-none"
-            >
-              Sign in
-            </button>
-            <div className="sm:flex sm:flex-wrap mt-8 sm:mb-4 text-sm text-center">
-              <div className="flex-2 underline text-indigo-600 hover:text-indigo-800">Forgot password</div>
+        <h2 className="text-center my-6 font-semibold text-3xl text-gray-800">Sign in to Avalanche Overnight</h2>
 
-              <p className="flex-1 text-gray-700 text-md mx-4 my-1 sm:my-auto">ou</p>
-
-              <div className="flex-2 underline text-indigo-600 hover:text-indigo-800">Sign up</div>
-            </div>
-          </form>
+        <div className="flex flex-col items-center">
+          <span onClick={handleSubmit}>
+            {" "}
+            <ConnectButton />
+          </span>
         </div>
       </div>
     </div>

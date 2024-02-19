@@ -1,7 +1,15 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import {
+  ConnectButton,
+  useAccountInfo,
+  useConnectKit,
+  useParticleConnect,
+  useParticleProvider,
+} from "@particle-network/connect-react-ui";
+import { disconnect } from "process";
 
 interface HeaderMenuLink {
   label: string;
@@ -23,7 +31,6 @@ export const menuLinks: HeaderMenuLink[] = [
   {
     label: "Log out",
     href: "/",
-    icon: <Image src="/images/sair-alt.png" alt="Log out" width={18} height={18} />,
   },
 ];
 
@@ -56,8 +63,19 @@ export const HeaderMenuLinks = ({ exclude, only }: { exclude?: string; only?: st
 };
 
 export const Header = () => {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const burgerMenuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const connectKit = useConnectKit();
+  const userInfo = connectKit?.particle?.auth.getUserInfo();
+  const { disconnect } = useParticleConnect();
+  const { account } = useAccountInfo();
+
+  const handleLogout = () => {
+    if (connectKit?.particle?.auth) {
+      disconnect();
+    }
+
+    router.push("/");
+  };
 
   return (
     <div className="fixed top-0 left-0 h-full z-20 shadow-md shadow-secondary bg-base-100" style={{ width: "300px" }}>
@@ -70,8 +88,16 @@ export const Header = () => {
         <ul className="menu menu-vertical px-1 gap-2 flex-grow">
           <HeaderMenuLinks exclude="Log out" only={undefined} />
         </ul>
-        <div className="mt-auto mb-4">
-          <HeaderMenuLinks only="Log out" exclude={undefined} />
+        <div className="w-full flex flex-col items-center mt-auto mb-4">
+          <Link
+            href={"/"}
+            onClick={handleLogout}
+            passHref
+            className={"flex flex-row py-2 px-4 mt-5 text-sm rounded hover:bg-secondary"}
+          >
+            <Image src="/images/sair-alt.png" alt="Log out" width={18} height={18} />
+            <span className="ml-4">Logout</span>
+          </Link>
         </div>
       </div>
     </div>
