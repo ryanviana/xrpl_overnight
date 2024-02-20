@@ -62,11 +62,11 @@ Despite the robust technology provided by Overnight, we believe that mass adopti
 Hence, we offer Smart Contracts and APIs for banks, which will deliver a **simple journey** to obtain credit and manage these operations.
 
 ## 📼 Presentation Video
-[Youtube Link]()
+[Youtube Link](https://www.youtube.com/watch?v=4G25kevHUio)
 
 
 ## 📄 Smart Contracts Docs
 [Link to the contracts' documentation](./docs/smartContracts.md)
 
 ## 🖥 Application Deploy
-[Link to our application]()
+[Link to our application](http://avalanche-overnight-two.vercel.app/)
