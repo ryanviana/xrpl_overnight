@@ -7,6 +7,8 @@ import Modal from "~~/components/Modal";
 import { loanData } from "~~/components/loanData";
 import { LoanData } from "~~/components/types";
 import OvernightJSON from "~~/utils/Overnight.json";
+import { useAccountInfo, useParticleConnect, useParticleProvider } from '@particle-network/connect-react-ui';
+
 
 require("dotenv").config();
 
@@ -29,6 +31,7 @@ const HomeScreen: NextPage = () => {
   });
   const [formattedQuantia, setFormattedQuantia] = useState("");
   const [version, setVersion] = useState(0);
+  const ParticleProvider = useParticleProvider();
 
   useEffect(() => {
     // Initialize the loans state with predefined data and handle router changes
@@ -69,26 +72,26 @@ const HomeScreen: NextPage = () => {
   // Function to add a new loan
   const addNewLoan = async (newLoanData: LoanData) => {
     try {
-      const walletK = "f7115643128bcd5cf917ad3b65e360d23d7f608b046124e14d48e2097c610125"; // Nunca exponha sua chave privada em código de produção
-      const provider = new ethers.providers.JsonRpcProvider("https://rpc-evm-sidechain.xrpl.org");
-      const wallet = new ethers.Wallet(walletK, provider);
 
-      const contractAddress = "0xF6ab2D1f34031B564562c012F5809e3F7F28661B";
-      const contractABI = OvernightJSON.abi;
-
-      const contract = new ethers.Contract(contractAddress, contractABI, wallet);
+      const customProvider = new ethers.providers.Web3Provider(ParticleProvider);
+      const signer = customProvider.getSigner();
+  
+      const OvernightABI = OvernightJSON.abi;
+      const ContractAddress = "0x7a21FDE31B2e7C2b95Da5fAec334d8f925fBB0d8"
+  
+      const OvernightContract = new ethers.Contract(ContractAddress, OvernightABI, signer);
+  
+      const tx = await OvernightContract.createLiquidityRequest(
+        newLoanData.institution,
+        newLoanData.amount,
+        "0xA9C5c74C998d18266118aa60CFBd9bBF89BDdb8f",
+      );
 
       // const selectedBank = banks.find(bank => bank.code === editFormData.institution);
       // if (!selectedBank) {
       //     console.error("Banco não selecionado");
       //     return;
       // }
-
-      const tx = await contract.createLiquidityRequest(
-        newLoanData.institution,
-        newLoanData.amount,
-        "0x84bAf7af378Ba73279fD92474e181324Fba31Ac7", // Substitua pelo endereço correto do ativo colateral
-      );
 
       console.log("Transaction sent:", tx.hash);
       await tx.wait();
@@ -117,21 +120,20 @@ const HomeScreen: NextPage = () => {
   const handleSubmit = async (e: React.FormEvent, index: number) => {
     e.preventDefault();
     if (index == null) return;
+    const requestIndex = "2";
 
     try {
-      const walletK = "88857b999398ea72b26b9f5a00409fd5502964dc5e8c7bf5aca4e2ccecc61d84";
-      const provider = new ethers.providers.JsonRpcProvider("https://rpc-evm-sidechain.xrpl.org");
-      const wallet = new ethers.Wallet(walletK, provider);
-
-      const contractAddress = "0xF6ab2D1f34031B564562c012F5809e3F7F28661B";
-      const contractABI = OvernightJSON.abi;
-
-      const contract = new ethers.Contract(contractAddress, contractABI, wallet);
-
-      const tx = await contract.provideLiquidity("5", editFormData.amount);
+      const customProvider = new ethers.providers.Web3Provider(ParticleProvider);
+      const signer = customProvider.getSigner();
+  
+      const OvernightABI = OvernightJSON.abi;
+      const ContractAddress = "0x7a21FDE31B2e7C2b95Da5fAec334d8f925fBB0d8"
+  
+      const OvernightContract = new ethers.Contract(ContractAddress, OvernightABI, signer);
+  
+      const tx = await OvernightContract.provideLiquidity(requestIndex, editFormData.amount);
 
       console.log("Transaction sent:", tx.hash);
-      await tx.wait();
       console.log("Transaction confirmed");
     } catch (error) {
       console.error("Error to send transaction:", error);
