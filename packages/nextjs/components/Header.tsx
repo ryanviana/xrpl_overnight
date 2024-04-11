@@ -82,7 +82,7 @@ export const Header = () => {
       <div className="flex flex-col h-full">
         <Link href="/home-screen" passHref className="flex items-center gap-2 p-4">
           <div className="flex flex-col items-center text-center mt-4">
-            <span className="font-semibold text-3xl leading-tight">Avalanche Overnight</span>
+            <span className="font-semibold text-3xl leading-tight">XRPL Overnight</span>
           </div>
         </Link>
         <ul className="menu menu-vertical px-1 gap-2 flex-grow">

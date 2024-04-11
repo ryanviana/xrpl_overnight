@@ -2,7 +2,6 @@ import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { WalletEntryPosition } from "@particle-network/auth";
 import { AvalancheTestnet } from "@particle-network/chains";
-import { evmWallets } from "@particle-network/connect";
 import { ModalProvider } from "@particle-network/connect-react-ui";
 import "@particle-network/connectkit/dist/index.css";
 import "@rainbow-me/rainbowkit/styles.css";
@@ -12,7 +11,7 @@ import { Header } from "~~/components/Header";
 import { GlobalStateProvider } from "~~/context/GlobalStateContext";
 import "~~/styles/globals.css";
 
-const AvalancheOvernight = ({ Component, pageProps }: AppProps) => {
+const XRPLOvernight = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
 
   return (
@@ -52,4 +51,4 @@ const AvalancheOvernight = ({ Component, pageProps }: AppProps) => {
   );
 };
 
-export default AvalancheOvernight;
+export default XRPLOvernight;

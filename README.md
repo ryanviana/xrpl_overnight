@@ -1,4 +1,4 @@
-# 🏛 Avalanche Overnight
+# 🏛 XRPL Overnight
 
 In most countries around the world, central banks require minimum reserves from banks and financial institutions. The reason for this is simple:
 
@@ -18,7 +18,6 @@ However, when banks do not have sufficient liquidity to meet reserve requirement
 
 However, this market faces several problems today:
 
-
 1. **High Transactions Costs**: traditional interbank operations can be costly and complex, involving multiple intermediaries. Blockchain can simplify these processes, reducing operational costs.
 2. **Lack of Liquidity** due to inefficiencies in communication between different financial institutions. Our platform can provide more liquidity for these operations.
 3. **Transparency and Auditability:** A lack of transparency in transactions can be a challenge for regulators and auditors. Blockchain's transparent ledger allows for easier tracking and auditing of financial transactions.
@@ -28,10 +27,9 @@ However, this market faces several problems today:
 
 In our solution, we developed a system for these operations for the Brazilian market for two main reasons:
 
-1) **Timing**: Brazil has one of the most developed CBDC projects (It is called Drex and will be made in EVM) in the world and which will also tokenize national treasury bonds. So, we can transact on-chain both the CBDC and the collateral.
+1. **Timing**: Brazil has one of the most developed CBDC projects (It is called Drex and will be made in EVM) in the world and which will also tokenize national treasury bonds. So, we can transact on-chain both the CBDC and the collateral.
 
-2) **Local Expertise:** Our team's Brazilian roots provide us with a strong understanding of the local financial market. This expertise is crucial in tailoring our system to Brazil's unique financial landscape, ensuring an effective and compliant solution.
-
+2. **Local Expertise:** Our team's Brazilian roots provide us with a strong understanding of the local financial market. This expertise is crucial in tailoring our system to Brazil's unique financial landscape, ensuring an effective and compliant solution.
 
 ### 📈 Business Model
 
@@ -62,11 +60,13 @@ Despite the robust technology provided by Overnight, we believe that mass adopti
 Hence, we offer Smart Contracts and APIs for banks, which will deliver a **simple journey** to obtain credit and manage these operations.
 
 ## 📼 Presentation Video
+
 [Youtube Link](https://www.youtube.com/watch?v=4G25kevHUio)
 
-
 ## 📄 Smart Contracts Docs
+
 [Link to the contracts' documentation](./docs/smartContracts.md)
 
 ## 🖥 Application Deploy
-[Link to our application](http://avalanche-overnight-two.vercel.app/)
+
+[Link to our application](https://xrpl-overnight.vercel.app/)

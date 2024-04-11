@@ -16,7 +16,7 @@ const Login: React.FC = () => {
   return (
     <div className="flex flex-col h-screen bg-base-200">
       <div className="grid place-items-center mx-2 my-20 sm:my-auto">
-        <h2 className="text-center my-6 font-semibold text-3xl text-gray-800">Sign in to Avalanche Overnight</h2>
+        <h2 className="text-center my-6 font-semibold text-3xl text-gray-800">Sign in to XRPL Overnight</h2>
 
         <div className="flex flex-col items-center">
           <span onClick={handleSubmit}>
